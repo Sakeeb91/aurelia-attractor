@@ -1,0 +1,57 @@
+{
+  "system": "Aurelia attractor",
+  "parameters": {
+    "a": 1.4,
+    "b": 0.5,
+    "c": 1.9
+  },
+  "lyapunov_spectrum": [
+    0.23272,
+    0.00127,
+    -1.51185
+  ],
+  "kaplan_yorke_dimension": 2.15477,
+  "largest_exponent_across_ics": [
+    0.25244,
+    0.19521,
+    0.24469,
+    0.23648,
+    0.22197
+  ],
+  "equilibria": [
+    {
+      "point": [
+        0.0,
+        0.0,
+        1.52292
+      ],
+      "eigenvalues": [
+        [
+          1.43209,
+          1.9
+        ],
+        [
+          1.43209,
+          -1.9
+        ],
+        [
+          -5.55786,
+          0.0
+        ]
+      ],
+      "type": "saddle-focus"
+    }
+  ],
+  "bounded_4M_steps": true,
+  "extent_min": [
+    -1.4024,
+    -1.6663,
+    -0.9808
+  ],
+  "extent_max": [
+    1.5993,
+    1.2733,
+    1.5004
+  ],
+  "mean_divergence": -1.29021
+}
