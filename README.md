@@ -55,6 +55,10 @@ dynamical-systems literature at the time of discovery.
 
 ![Contact sheet](gallery/aurelia_sheet.png)
 
+One full orbit of the camera (`python scripts/render_animation.py`):
+
+![Rotating view](gallery/aurelia_rotation.gif)
+
 ## Certification of chaos
 
 All numbers below are reproducible with `python scripts/verify_chaos.py`
