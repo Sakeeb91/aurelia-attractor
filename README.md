@@ -4,6 +4,8 @@
 
 **[Explore it live in your browser](https://sakeeb91.github.io/aurelia-attractor/)**: a WebGL viewer with 400,000 orbit points, 3,000 particles riding the flow in real time, orbit controls, and live parameter sliders.
 
+**[Read the story](STORY.md)**: a long-form narrative of the discovery, from the failed first family through the 600-universe search to the certification of chaos.
+
 ![The Aurelia attractor](gallery/aurelia_hero.png)
 
 ## The system
