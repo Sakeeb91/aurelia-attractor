@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Exploration scratch space (not part of the published artifact)
+scratch/
+
+# OS
+.DS_Store
