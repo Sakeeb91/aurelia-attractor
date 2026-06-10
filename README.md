@@ -2,6 +2,8 @@
 
 *A novel strange attractor with the silhouette of a moon jellyfish — discovered, certified, and named June 10, 2026.*
 
+**[Explore it live in your browser](https://sakeeb91.github.io/aurelia-attractor/)**: a WebGL viewer with 400,000 orbit points, 3,000 particles riding the flow in real time, orbit controls, and live parameter sliders.
+
 ![The Aurelia attractor](gallery/aurelia_hero.png)
 
 ## The system
