@@ -167,15 +167,58 @@ vectorized complex RK4 and reproduces Aurelia's Lyapunov exponent as a
 sanity check. The archive persists across runs (`results/atlas/archive.json`),
 so the search compounds.
 
+## Naiad: the first attractor the atlas found
+
+The first thing the search turned up worth keeping is **Naiad**, the two-fold
+(C₂) sibling of Aurelia, named for the water nymph of fountains and springs.
+Where Aurelia rotates three-fold, Naiad uses rotation order n = 2, so the
+conjugate term is simply `conj(w)`: an anisotropic stretch that makes the
+flow symmetric under a half-turn `(x, y) → (−x, −y)`. The attractor is a
+flaring **fountain**: a wide turbulent bowl, a bright jet up the central
+axis, a narrow stem at the base. Seen from above it is a lens, not a disk,
+because two-fold symmetry stretches it along one direction.
+
+![The Naiad attractor](gallery/naiad_hero.png)
+
+| The lens (top) | The jet (side) |
+|---|---|
+| ![Naiad lens](gallery/naiad_lens.png) | ![Naiad jet](gallery/naiad_jet.png) |
+
+```
+dx/dt = (a(z − b) + g)x − w·y
+dy/dt = w·x + (a(z − b) − g)y          a=1.2, b=0.68, w=3.7, g=1.7,
+dz/dt = mu + nu·z − z³ − lam(x² + y²)   mu=1.2, nu=2.0, lam=2.1
+```
+
+Certified the same way as Aurelia (`python scripts/verify_naiad.py`,
+recorded in [`results/naiad_verification.json`](results/naiad_verification.json)):
+
+| Property | Value |
+|---|---|
+| Lyapunov spectrum | **λ₁ = +0.296**, λ₂ = +0.001 ≈ 0, λ₃ = −2.696 |
+| Kaplan–Yorke dimension | **D_KY ≈ 2.110** |
+| λ₁ across 5 random initial conditions | 0.284 … 0.341 (always positive) |
+| Equilibria | exactly one: saddle-focus at (0, 0, 1.651) |
+| Eigenvalues at the equilibrium | 1.166 ± 3.286i (unstable spiral), −6.18 |
+| Time-averaged divergence | −2.386 (dissipative) |
+| Novelty vs the dysts catalog | nearest known system **SprottJerk at distance 0.34** |
+
+That novelty distance of 0.34 makes Naiad *more* isolated in shape space than
+Aurelia (0.185), against a catalog whose median nearest-neighbor spacing is
+0.115. Like Aurelia, it is organized by a single Shilnikov-type saddle-focus,
+here with a faster spiral.
+
 ## Reproduce everything
 
 ```bash
 pip install -r requirements.txt
 
-python scripts/verify_chaos.py        # certify chaos, write results/verification.json
-python scripts/render_gallery.py      # render the gallery images
+python scripts/verify_chaos.py        # certify Aurelia, write results/verification.json
+python scripts/render_gallery.py      # render the Aurelia gallery
 python scripts/bifurcation_scan.py    # sweep c, plot the route to chaos
 python scripts/search_parameters.py   # re-run the original discovery search
+python scripts/verify_naiad.py        # certify Naiad, write results/naiad_verification.json
+python scripts/render_naiad.py        # render the Naiad gallery
 ```
 
 Or use it as a library:
