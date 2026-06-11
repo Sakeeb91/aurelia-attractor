@@ -43,6 +43,9 @@ def fingerprint(points, rng=None):
     sub = pts[idx]
     d = np.sqrt(((sub[:, None, :] - sub[None, :, :]) ** 2).sum(-1))
     d = d[np.triu_indices(len(sub), k=1)]
+    # float64 + clip: float32 inputs can land exactly on the top edge and
+    # overflow numpy's fast histogram path
+    d = np.clip(d.astype(np.float64), D2_RANGE[0], D2_RANGE[1])
     hist, _ = np.histogram(d, bins=D2_BINS, range=D2_RANGE, density=True)
     hist = np.sqrt(hist / (hist.sum() + 1e-12))          # Hellinger embedding
 
