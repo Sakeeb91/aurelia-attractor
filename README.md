@@ -208,6 +208,47 @@ Aurelia (0.185), against a catalog whose median nearest-neighbor spacing is
 0.115. Like Aurelia, it is organized by a single Shilnikov-type saddle-focus,
 here with a faster spiral.
 
+## Cassiopea: the four-fold member
+
+**Cassiopea** completes a three-member family (C₂ Naiad, C₃ Aurelia, C₄
+Cassiopea), named for *Cassiopea*, the upside-down jellyfish whose bell
+carries a four-leaf-clover marking: a real animal with genuine four-fold
+symmetry. The equivariant term is `conj(w)³`, the unique cubic surviving a
+quarter-turn `w → iw`. Seen from above the attractor is a **four-armed
+pinwheel star** with a white spiral core; from the side, a layered bell
+with twin curtains.
+
+![The Cassiopea attractor](gallery/cassiopea_hero.png)
+
+| The star (top) | The bell (side) |
+|---|---|
+| ![Cassiopea star](gallery/cassiopea_star.png) | ![Cassiopea bell](gallery/cassiopea_bell.png) |
+
+```
+dx/dt = a(z − b)x − w·y + g(x³ − 3xy²)
+dy/dt = w·x + a(z − b)y + g(y³ − 3x²y)     a=2.0, b=0.85, w=1.8, g=0.9,
+dz/dt = mu + nu·z − z³ − lam(x² + y²)       mu=1.28, nu=1.8, lam=2.8
+```
+
+Certified via `python scripts/verify_cassiopea.py`
+([`results/cassiopea_verification.json`](results/cassiopea_verification.json)):
+
+| Property | Value |
+|---|---|
+| Lyapunov spectrum | **λ₁ = +0.525**, λ₂ ≈ 0, λ₃ = −2.412 |
+| Kaplan–Yorke dimension | **D_KY ≈ 2.218** |
+| λ₁ across 5 random initial conditions | 0.490 … 0.555 (always positive) |
+| Equilibria | a central saddle-focus at (0, 0, 1.611) plus a C₄ quadruple of distant saddles |
+| Eigenvalues at the saddle-focus | 1.522 ± 1.8i (unstable spiral), −5.984 |
+| Time-averaged divergence | −1.868 (dissipative) |
+| Novelty vs the dysts catalog | nearest known system NoseHoover at distance 0.224 |
+
+Cassiopea carries the **strongest chaos and deepest fractal structure of the
+family** (Aurelia λ₁ = 0.233, Naiad 0.296, Cassiopea 0.525), and it is the
+first member with off-axis equilibria: four distant saddles at radius 3,
+arranged in a square far below the attractor, with the familiar single
+saddle-focus engine on the axis.
+
 ## Reproduce everything
 
 ```bash
@@ -219,6 +260,8 @@ python scripts/bifurcation_scan.py    # sweep c, plot the route to chaos
 python scripts/search_parameters.py   # re-run the original discovery search
 python scripts/verify_naiad.py        # certify Naiad, write results/naiad_verification.json
 python scripts/render_naiad.py        # render the Naiad gallery
+python scripts/verify_cassiopea.py    # certify Cassiopea
+python scripts/render_cassiopea.py    # render the Cassiopea gallery
 ```
 
 Or use it as a library:
