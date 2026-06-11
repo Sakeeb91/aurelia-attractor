@@ -139,7 +139,17 @@ Searched June 10, 2026, before publication:
   83% of known systems sit closer to something known than Aurelia does. By
   this metric, Aurelia is more isolated in shape space than five-sixths of
   the established bestiary, and its nearest relative is exactly the system
-  the qualitative analysis predicted.
+  the qualitative analysis predicted. The metric itself is validated in
+  `scripts/validate_fingerprint.py`: documented Lorenz-family variants
+  cluster (positive control), the algebraically defined Sprott family does
+  not (negative control — the fingerprint reads geometry, not algebra), and
+  the within-system noise floor is ≈0.05, putting all three of our systems
+  3–5 noise floors from anything known. Under re-simulation Aurelia's
+  distance is stable at 0.184, with the InteriorSquirmer system
+  statistically tied with Aizawa — at this isolation, ties between distant
+  neighbors are expected.
+  Map: [gallery/fingerprint_map.png](gallery/fingerprint_map.png) ·
+  details: [results/fingerprint_validation.json](results/fingerprint_validation.json).
 
 ## Discovery method
 
@@ -174,6 +184,12 @@ Panda corpus bred from the dysts catalog as training data (Lai, Bao & Gilpin
 a family of dynamical systems, with novelty measured against a catalog of known
 attractors rather than chaos strength optimized
 ([docs/RELATED_WORK.md](docs/RELATED_WORK.md)).
+
+The whole shape space at a glance — the dysts catalog as dots, the three
+discoveries as stars on the rim of the known cloud (metric MDS of
+fingerprint distances, Kruskal stress-1 = 0.13):
+
+![Shape space of known attractors with the three new systems](gallery/fingerprint_map.png)
 
 ```bash
 pip install dysts                                # reference catalog (one-time)
@@ -222,12 +238,12 @@ recorded in [`results/naiad_verification.json`](results/naiad_verification.json)
 | Equilibria | exactly one: saddle-focus at (0, 0, 1.651) |
 | Eigenvalues at the equilibrium | 1.166 ± 3.286i (unstable spiral), −6.18 |
 | Time-averaged divergence | −2.386 (dissipative) |
-| Novelty vs the dysts catalog | nearest known system **SprottJerk at distance 0.34** |
+| Novelty vs the dysts catalog | nearest known system at distance **0.29–0.34** across re-simulations (the rank-1 identity flips between SprottJerk and ForcedFitzHughNagumo at this isolation) |
 
-That novelty distance of 0.34 makes Naiad *more* isolated in shape space than
-Aurelia (0.185), against a catalog whose median nearest-neighbor spacing is
-0.115. Like Aurelia, it is organized by a single Shilnikov-type saddle-focus,
-here with a faster spiral.
+That novelty distance of ≈0.3 makes Naiad the *most* isolated member of the
+family in shape space (Aurelia sits at 0.18), against a catalog whose median
+nearest-neighbor spacing is 0.115. Like Aurelia, it is organized by a single
+Shilnikov-type saddle-focus, here with a faster spiral.
 
 ## Cassiopea: the four-fold member
 
@@ -263,7 +279,7 @@ Certified via `python scripts/verify_cassiopea.py`
 | Equilibria | a central saddle-focus at (0, 0, 1.611) plus a C₄ quadruple of distant saddles |
 | Eigenvalues at the saddle-focus | 1.522 ± 1.8i (unstable spiral), −5.984 |
 | Time-averaged divergence | −1.868 (dissipative) |
-| Novelty vs the dysts catalog | nearest known system NoseHoover at distance 0.224 |
+| Novelty vs the dysts catalog | nearest known system NoseHoover at distance **0.17–0.22** across re-simulations (Aizawa statistically tied) |
 
 Cassiopea carries the **strongest chaos and deepest fractal structure of the
 family** (Aurelia λ₁ = 0.233, Naiad 0.296, Cassiopea 0.525), and it is the
@@ -285,6 +301,7 @@ python scripts/render_naiad.py        # render the Naiad gallery
 python scripts/verify_cassiopea.py    # certify Cassiopea
 python scripts/render_cassiopea.py    # render the Cassiopea gallery
 python scripts/convergence_study.py   # error-barred Lyapunov spectra for all three
+python scripts/validate_fingerprint.py # validate the novelty metric, draw the shape map
 ```
 
 Or use it as a library:
