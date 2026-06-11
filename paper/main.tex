@@ -532,14 +532,62 @@ merely occupies a luckier corner of its parameter box, is open; the
 archive's empty high-$\lambda_1$ cells at $n=5$ sharpen the question.
 
 \section{Limitations}\label{sec:limitations}
-[Placeholder: numerical (not rigorous) certification; dysts is 135 systems,
-not the literature; fingerprint crudeness and noise floor; aesthetics
-subjectivity.]
+
+\paragraph{Certification is numerical, not rigorous.}
+Lyapunov spectra, dimensions, and the homoclinic return distances are
+measurements with error bars, not theorems. No computer-assisted proof of
+chaos in the style of \citet{tucker2002} exists for any member of the
+family; producing one would be a genuine contribution.
+
+\paragraph{The catalog is not the literature.}
+Novelty is measured against the 135 systems of \textsf{dysts}, not
+against every published flow. The literature search of
+Section~\ref{sec:related} hedges the gap qualitatively, but a system
+absent from the catalog (or from our search) could still be a close
+relative; ``novel'' here always means \emph{measured against the
+catalog, not found by search elsewhere}. Enlarging the reference set ---
+for instance by fingerprinting the $2\times10^4$ evolved systems of
+\citet{lai2025panda} --- is mechanical future work.
+
+\paragraph{The fingerprint is crude and has a measured noise floor.}
+Geometry-only descriptors at 1{,}500--15{,}000 orbit points carry a
+within-system spread of $0.05$--$0.08$; distances below ${\sim}0.1$ are
+uninterpretable and nearest-neighbor identities tie at the isolation
+frontier (Section~\ref{sec:map}). Higher-dimensional catalog systems are
+projected to their first three coordinates before fingerprinting. The
+metric also ignores dynamics entirely --- two attractors with identical
+shapes but different time parameterizations are identical to it.
+
+\paragraph{One-parameter homoclinic sweeps.}
+The hunt sweeps a single parameter per system. Aurelia's standoff result
+means only that no connection exists \emph{along the $c$-axis}; a
+two-parameter hunt (e.g., in $(a,c)$) could find one and is the obvious
+next step.
+
+\paragraph{Aesthetics stayed human.}
+The exhibits were promoted from the archive partly by eye. The pipeline
+measures chaos and novelty, not beauty; the observation that strong
+stretching correlates with visual richness (our first, wiry, weakly
+chaotic family was discarded for looking dead) is a remark, not a result.
 
 \section{Reproducibility}\label{sec:repro}
-[Placeholder: one script per claim; live viewer; archive persistence.]
 
-\nocite{*}  % skeleton stage: render the whole verified bibliography
+Every quantitative claim in this paper is one script in the public
+repository:\footnote{\url{https://github.com/Sakeeb91/attractor-atlas} ---
+code, results JSON, gallery, and an interactive WebGL viewer of all three
+systems (\url{https://sakeeb91.github.io/attractor-atlas/}).}
+\texttt{verify\_chaos.py} / \texttt{verify\_naiad.py} /
+\texttt{verify\_cassiopea.py} (certification),
+\texttt{convergence\_study.py} (Section~\ref{sec:convergence}),
+\texttt{validate\_fingerprint.py} (Section~\ref{sec:map}),
+\texttt{bifurcation\_scan.py} and \texttt{homoclinic\_hunt.py}
+(Section~\ref{sec:shilnikov}), \texttt{build\_catalog\_fingerprints.py}
+and \texttt{run\_atlas.py} (the engine; the archive persists across runs,
+so searches compound). Each writes its results to a versioned JSON file;
+the figures in this paper are the committed gallery renders. The full
+environment is NumPy/SciPy/Matplotlib plus \textsf{dysts} for the catalog
+and \textsf{numba} for the tangent-flow integrators.
+
 \bibliographystyle{plainnat}
 \bibliography{references}
 
