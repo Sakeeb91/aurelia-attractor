@@ -31,7 +31,11 @@
     line-height: 1.5;
     overflow: hidden;
   }
-  #scene { position: fixed; inset: 0; z-index: 0; display: block; touch-action: none; }
+  /* width/height 100% so the canvas DISPLAYS at viewport size even though its
+     drawing buffer is devicePixelRatio larger (setSize updateStyle=false).
+     Without this the high-DPI buffer renders at 2x and the attractor, centered
+     in the buffer, lands in the corner of the viewport. */
+  #scene { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; touch-action: none; }
 
   /* ---- HUD title block ---- */
   .hud {
@@ -327,7 +331,7 @@ const SYSTEMS = {
     seed: [0.3, 0.2, 0.1],
     ramp: ['#1b1040','#4b2e83','#a44a9c','#e0719b','#f4a261','#ffd97d','#fff3d6'],
     accent: '#ffd97d',
-    home: [2.5, -2.5, 1.8], target: [0, 0, 0.25],
+    home: [2.9, -2.9, 2.1], target: [0, 0, 0.25],
   },
   naiad: {
     name: 'NAIAD',
@@ -350,7 +354,7 @@ const SYSTEMS = {
     seed: [0.3, 0.2, 0.1],
     ramp: ['#08203a','#0f3d6b','#1f7a9c','#46b6c0','#9fe6d8','#e6fbff','#ffffff'],
     accent: '#9fe6d8',
-    home: [2.6, -2.6, 1.7], target: [0, 0, 0.35],
+    home: [3.0, -3.0, 1.9], target: [0, 0, 0.35],
   },
 };
 
