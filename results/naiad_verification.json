@@ -1,0 +1,79 @@
+{
+  "system": "Naiad attractor",
+  "parameters": {
+    "a": 1.2,
+    "b": 0.68,
+    "w_rot": 3.7,
+    "g": 1.7,
+    "mu": 1.2,
+    "nu": 2.0,
+    "lam": 2.1
+  },
+  "lyapunov_spectrum": [
+    0.29646,
+    0.00112,
+    -2.69638
+  ],
+  "kaplan_yorke_dimension": 2.11036,
+  "largest_exponent_across_ics": [
+    0.30258,
+    0.34121,
+    0.28387,
+    0.3016,
+    0.30865
+  ],
+  "equilibria": [
+    {
+      "point": [
+        0.0,
+        0.0,
+        1.651276
+      ],
+      "eigenvalues": [
+        [
+          1.16553,
+          3.28634
+        ],
+        [
+          1.16553,
+          -3.28634
+        ],
+        [
+          -6.18013,
+          0.0
+        ]
+      ],
+      "type": "saddle-focus"
+    }
+  ],
+  "bounded_4M_steps": true,
+  "extent_min": [
+    -1.421,
+    -1.296,
+    -0.9838
+  ],
+  "extent_max": [
+    1.421,
+    1.296,
+    1.6513
+  ],
+  "mean_divergence": -2.3862,
+  "novelty_vs_dysts": {
+    "nearest": "SprottJerk",
+    "distance": 0.34,
+    "next": [
+      [
+        "ItikBanksTumor",
+        0.3896
+      ],
+      [
+        "VossDelay",
+        0.3906
+      ],
+      [
+        "SprottF",
+        0.3938
+      ]
+    ]
+  }
+}
