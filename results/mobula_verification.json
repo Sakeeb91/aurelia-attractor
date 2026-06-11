@@ -1,0 +1,215 @@
+{
+  "system": "Mobula attractor",
+  "symmetry": "S4 rotoreflection (Schoenflies), generator sigma:(w,z)->(i*w,-z)",
+  "parameters": {
+    "alpha": 1.41039,
+    "beta": 0.670108,
+    "omega": 2.426585,
+    "gamma": 0.3,
+    "delta": 0.553378,
+    "nu": 3.3,
+    "lam": 2.135518,
+    "eps": 1.215326
+  },
+  "lyapunov_spectrum": [
+    0.32949,
+    0.00028,
+    -1.23834
+  ],
+  "kaplan_yorke_dimension": 2.2663,
+  "largest_exponent_across_ics": [
+    0.35994,
+    0.35523,
+    0.33457,
+    0.38377,
+    0.35931
+  ],
+  "equilibria": [
+    {
+      "point": [
+        0.0,
+        0.0,
+        -1.81659
+      ],
+      "eigenvalues": [
+        [
+          3.98418,
+          2.20857
+        ],
+        [
+          3.98418,
+          -2.20857
+        ],
+        [
+          -6.6,
+          0.0
+        ]
+      ],
+      "type": "saddle-focus"
+    },
+    {
+      "point": [
+        1.005759,
+        -2.547051,
+        -0.480984
+      ],
+      "eigenvalues": [
+        [
+          5.40751,
+          0.0
+        ],
+        [
+          -6.22763,
+          0.0
+        ],
+        [
+          -13.27586,
+          0.0
+        ]
+      ],
+      "type": "saddle"
+    },
+    {
+      "point": [
+        -1.005759,
+        2.547051,
+        -0.480984
+      ],
+      "eigenvalues": [
+        [
+          5.40751,
+          0.0
+        ],
+        [
+          -6.22763,
+          0.0
+        ],
+        [
+          -13.27586,
+          0.0
+        ]
+      ],
+      "type": "saddle"
+    },
+    {
+      "point": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "eigenvalues": [
+        [
+          -0.67011,
+          2.42659
+        ],
+        [
+          -0.67011,
+          -2.42659
+        ],
+        [
+          3.3,
+          0.0
+        ]
+      ],
+      "type": "saddle-focus"
+    },
+    {
+      "point": [
+        -2.547051,
+        -1.005759,
+        0.480984
+      ],
+      "eigenvalues": [
+        [
+          5.40751,
+          0.0
+        ],
+        [
+          -6.22763,
+          0.0
+        ],
+        [
+          -13.27586,
+          0.0
+        ]
+      ],
+      "type": "saddle"
+    },
+    {
+      "point": [
+        2.547051,
+        1.005759,
+        0.480984
+      ],
+      "eigenvalues": [
+        [
+          5.40751,
+          0.0
+        ],
+        [
+          -6.22763,
+          0.0
+        ],
+        [
+          -13.27586,
+          0.0
+        ]
+      ],
+      "type": "saddle"
+    },
+    {
+      "point": [
+        0.0,
+        0.0,
+        1.81659
+      ],
+      "eigenvalues": [
+        [
+          3.98418,
+          2.20857
+        ],
+        [
+          3.98418,
+          -2.20857
+        ],
+        [
+          -6.6,
+          0.0
+        ]
+      ],
+      "type": "saddle-focus"
+    }
+  ],
+  "bounded_4M_steps": true,
+  "extent_min": [
+    -1.8383,
+    -1.866,
+    -1.6135
+  ],
+  "extent_max": [
+    1.8375,
+    1.8353,
+    1.6621
+  ],
+  "mean_divergence": -0.90372,
+  "s4_symmetry_residual": 0.01363,
+  "flip_control_residual": 0.04553,
+  "novelty_vs_dysts": {
+    "nearest": "NuclearQuadrupole",
+    "distance": 0.2729,
+    "next": [
+      [
+        "OscillatingFlow",
+        0.3025
+      ],
+      [
+        "ThomasLabyrinth",
+        0.3097
+      ],
+      [
+        "SprottA",
+        0.3181
+      ]
+    ]
+  }
+}
