@@ -310,26 +310,226 @@ so the search compounds.
 \section{Results}\label{sec:results}
 
 \subsection{The atlas run}\label{sec:run}
-[Placeholder: 4{,}608 candidates in 127 s, 62 elites.]
+
+The first run evaluated 48 generations of 96 candidates --- 4{,}608
+seven-parameter systems across rotation orders $n=2..5$ --- in 127 seconds
+on a laptop CPU, and retained 62 elites (44\% of the 140 cells;
+Figure~\ref{fig:montage}). The empty cells are themselves data: no
+candidate with $\lambda_1 > 0.45$ appeared at $n=5$, and the five-fold
+elites that did appear are weakly chaotic --- either a real boundary of
+the family or a target for longer runs.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.9\linewidth]{atlas_montage.png}
+  \caption{The most novel elites of the first atlas run (4{,}608
+  candidates, 62 elites), rendered as orbit clouds. Each is a distinct
+  $C_n$-equivariant system; the archive keys cells by $(n, \lambda_1,
+  \text{aspect})$ and keeps the most catalog-novel specimen per cell.}
+  \label{fig:montage}
+\end{figure}
 
 \subsection{Three certified systems}\label{sec:systems}
-[Placeholder: table of parameters, spectra, $\dky$, equilibria, novelty
-distances; the 83\% isolation statistic.]
+
+Three elites were promoted to named, certified exhibits: rounded to clean
+parameters (rounding \emph{raised} $\lambda_1$ in two of three cases),
+re-integrated at full length, and put through the battery of
+Table~\ref{tab:systems}. All three share the family anatomy --- a single
+on-axis saddle-focus organizing a symmetric recirculating bell --- and all
+three carry the $(+,0,-)$ spectrum and fractional Kaplan--Yorke dimension
+\citep{kaplanYorke1979} of genuine strange attractors. Boundedness was
+confirmed over $4\times10^6$ RK4 steps for each.
+
+\begin{table}[tbp]
+  \centering\small
+  \caption{The three certified exhibits. Spectra and dimensions are
+  mean $\pm$ s.d.\ over 10 random initial conditions at $dt=0.005$,
+  $8\times10^5$ steps (Section~\ref{sec:convergence}); novelty is the
+  fingerprint distance to the nearest \textsf{dysts} system, quoted as the
+  range over re-simulations (Section~\ref{sec:map}); isolation percentile
+  = fraction of catalog systems whose nearest neighbor is closer than
+  ours. $D_{\min}$ is the closest return of the unstable manifold to the
+  saddle-focus along the swept rotation-rate axis
+  (Section~\ref{sec:shilnikov}).}
+  \label{tab:systems}
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    & Naiad & Aurelia & Cassiopea \\
+    \midrule
+    Symmetry & $C_2$ & $C_3$ & $C_4$ \\
+    Coupling & $\gamma\conj{w}$ & $\gamma\conj{w}^{2}$ & $\gamma\conj{w}^{3}$ \\
+    Parameters & $(1.2,.68,3.7,1.7,1.2,2,2.1)$ & $(1.4,0.5,1.9)$\,$^{a}$ & $(2,.85,1.8,.9,1.28,1.8,2.8)$ \\
+    $\lambda_1$ & $0.294 \pm 0.009$ & $0.230 \pm 0.009$ & $0.523 \pm 0.008$ \\
+    $\lambda_2$ & $+0.0004$ & $+0.0003$ & $-0.0000$ \\
+    $\lambda_3$ & $-2.663 \pm 0.028$ & $-1.526 \pm 0.012$ & $-2.386 \pm 0.040$ \\
+    $\dky$ & $2.110 \pm 0.004$ & $2.151 \pm 0.006$ & $2.219 \pm 0.006$ \\
+    Equilibria & 1 & 1 & $1 + 4$\,$^{b}$ \\
+    Saddle-focus at & $(0,0,1.651)$ & $(0,0,1.523)$ & $(0,0,1.611)$ \\
+    Eigenvalues & $1.17 \pm 3.29i;\ -6.18$ & $1.43 \pm 1.90i;\ -5.56$ & $1.52 \pm 1.80i;\ -5.98$ \\
+    Saddle index $\nu$ & $0.189$ & $0.258$ & $0.254$ \\
+    Novelty (nearest) & $0.29$--$0.34$ & $0.18$ & $0.17$--$0.22$ \\
+    Isolation percentile & $97.8\%$ & $83.0\%$ & $79.3\%$ \\
+    Homoclinic $D_{\min}$ & $7.5\times10^{-5}$ & $0.128$ & $6.5\times10^{-4}$ \\
+    \bottomrule
+  \end{tabular}
+
+  \smallskip
+  \raggedright\footnotesize
+  $^{a}$ Aurelia's seven raw parameters collapsed under
+  Lyapunov-guarded rounding to three distinct constants
+  $(a,b,c)$: $\alpha{=}\mu{=}\nu{=}1.4$, $\gamma{=}\beta{=}0.5$,
+  $\omega{=}\lambda{=}1.9$.\quad
+  $^{b}$ A central saddle-focus plus a $C_4$ quadruple of saddles at
+  radius 3, far below the attractor.
+\end{table}
+
+The nearest catalog neighbors are dynamically sensible: Aurelia's is the
+Aizawa/Langford flow \citep{langford1984} --- the system a qualitative
+analysis would name, an axially organized rotating column --- and the
+isolation percentiles say that each exhibit is farther from everything
+known than most known systems are from each other (for Naiad, farther
+than 97.8\% of the catalog). Naming follows the family resemblance: all
+three are jellyfish-like bells organized by an axial column
+(\emph{Aurelia} the moon jelly, \emph{Naiad} the fountain nymph,
+\emph{Cassiopea} the four-fold upside-down jellyfish).
 
 \subsection{Convergence and error bars}\label{sec:convergence}
-[Placeholder: the dt x length x IC grid; Figure convergence.png.]
+
+Single Lyapunov estimates invite doubt, so every spectrum is measured on
+a grid: $dt \in \{0.01, 0.005, 0.0025\}$ $\times$ run lengths
+$\{2,4,8\}\times10^5$ steps $\times$ 10 random initial conditions per
+system (Benettin tangent-flow RK4 with QR re-orthonormalization
+\citep{benettin1980}; 90 long runs, none escaped). Figure~\ref{fig:conv}
+shows the result: estimates at different $dt$ agree within their
+initial-condition scatter, error bars shrink with run length, and the
+certified values sit inside every error bar. The obligatory zero exponent
+lands at $|\lambda_2| < 4\times10^{-4}$ across all 270 grid points ---
+two to three orders below $\lambda_1$ --- confirming the spectra are
+resolved. Segment-based standard errors (each $8\times10^5$-step run cut
+into ten segments) agree with the across-IC scatter.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{convergence.png}
+  \caption{Lyapunov convergence for the three systems: $\lambda_1$ (top)
+  and $\dky$ (bottom) versus run length, for three integrator steps,
+  mean $\pm$ s.d.\ over 10 initial conditions; dashed lines are the
+  certified values.}
+  \label{fig:conv}
+\end{figure}
 
 \subsection{The shape-space map}\label{sec:map}
-[Placeholder: fingerprint validation (controls, noise floor) and the MDS
-map; Figure fingerprint\_map.png.]
+
+A novelty metric is only as good as its validation. Three tests
+(\texttt{scripts/validate\_fingerprint.py}):
+
+\emph{Positive control.} Documented geometric variants should cluster.
+The Lorenz lineage present in the catalog (Lorenz, LorenzBounded,
+LorenzStenflo, Chen, HyperLorenz, HyperLu) has mean within-family
+distance $0.21$ against a catalog-wide mean pairwise distance of $0.42$
+(ratio $0.49$), and the top nearest-neighbor pairs are documented twins:
+Lorenz$\leftrightarrow$LorenzBounded at $0.049$,
+Chen$\leftrightarrow$HyperLu at $0.042$.
+
+\emph{Negative control.} The Sprott systems are an \emph{algebraic}
+family --- minimal equations, deliberately diverse dynamics --- so a
+geometry metric should \emph{not} cluster them. It does not: 2 of 23
+Sprott systems have a Sprott nearest neighbor, at the null rate (0.164).
+The fingerprint reads shape, not symbols.
+
+\emph{Noise floor.} Re-fingerprinting one system across trajectory
+realizations and subsampling seeds gives a within-system spread of
+$0.055$ (15{,}000-point orbits) and $0.084$ at the catalog's own
+1{,}500-point trajectory length (shrinking to $0.050$ at 6{,}000
+points). Distances below ${\sim}0.1$ are therefore not interpretable ---
+LorenzBounded sits \emph{inside} Lorenz's own noise floor --- and
+nearest-neighbor \emph{identities} become rank-unstable wherever several
+systems tie within one noise floor, which is exactly what happens at our
+exhibits' distances: Naiad's nearest neighbor flips between SprottJerk
+and a forced FitzHugh--Nagumo system between re-simulations, and
+InteriorSquirmer ties Aizawa for Aurelia. The \emph{distances} are
+stable; we therefore quote ranges in Table~\ref{tab:systems} and claim
+isolation, not specific kinship. All three exhibits sit 3.1--5.2 noise
+floors from anything in the catalog.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{fingerprint_map.png}
+  \caption{Shape space of the 135 \textsf{dysts} systems (dots) with the
+  three exhibits (stars): metric MDS of fingerprint distances, Kruskal
+  stress-1 $= 0.133$. Dotted lines join each exhibit to its nearest
+  catalog neighbor. All three sit on the rim of the known cloud.}
+  \label{fig:map}
+\end{figure}
+
+The two-dimensional map of the joint distance matrix
+(Figure~\ref{fig:map}, Kruskal stress-1 $=0.133$) summarizes the
+geography: the catalog forms a connected central cloud, the famous
+systems scatter through its interior, and the three exhibits sit on the
+rim --- Naiad farthest out, beyond Thomas's weave.
 
 \subsection{Bifurcations and Shilnikov evidence}\label{sec:shilnikov}
-[Placeholder: bifurcation scan of Aurelia; homoclinic hunt results;
-Figure homoclinic.png.]
+
+Sweeping Aurelia's rotation rate $c$ with $(a,b)$ fixed maps the route to
+chaos: limit cycles below $c \approx 1.40$, a chaotic band to
+${\approx}1.62$, a broader chaotic continent on $1.81$--$2.33$ holding
+the canonical $c=1.9$, periodic windows throughout, and a final flicker
+of chaos near $2.40$ (281-point scan, Figure~\ref{fig:homo} context;
+data in \texttt{results/bifurcation\_c.csv}). The chaotic set is a band,
+not a knife-edge.
+
+All three saddle-foci satisfy Shilnikov's eigenvalue inequality --- the
+saddle index $\nu = \rho/|\lambda_3|$ is $0.19$--$0.26 < 1$, and because
+neither $\rho$ nor $\lambda_3$ involves the rotation rate, the inequality
+holds along the entire swept axis. The missing ingredient for the theorem
+is a homoclinic orbit. We hunt for one by shooting: launch trajectories
+from a circle of radius $10^{-3}$ in the unstable eigenplane (48 phases
+spanning one $C_n$ sector), record the closest return to the equilibrium
+after the trajectory first leaves its neighborhood, minimize over phase,
+sweep the rotation rate, and zoom twice on the minimum
+(Figure~\ref{fig:homo}).
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{homoclinic.png}
+  \caption{The homoclinic hunt. Top: closest return of the unstable
+  manifold to the saddle-focus versus rotation rate (log scale; dashed =
+  canonical parameter; star = global minimum after two zoom stages).
+  Bottom: the minimizing shot in the $x$--$z$ plane;
+  $\times$ marks the saddle-focus. Naiad's minimizing orbit is a visually
+  closed Shilnikov loop.}
+  \label{fig:homo}
+\end{figure}
+
+The outcome splits the family. \textbf{Naiad}: the return distance
+plunges to $7.5\times10^{-5}$ at $\omega = 1.833$, and a \emph{ladder} of
+seven interior near-connection windows ($D \sim 10^{-4}$) accumulates
+between there and the canonical parameter, where the manifold still
+passes within $7.6\times10^{-4}$ of the equilibrium --- the canonical
+Naiad attractor lives essentially \emph{at} a Shilnikov configuration.
+\textbf{Cassiopea}: returns within $6.5\times10^{-4}$ at the low-rotation
+edge of the sweep and within $5.6\times10^{-3}$ at the canonical
+parameter. \textbf{Aurelia} is the holdout: across the entire band
+$c \in [0.8, 2.55]$ its manifold keeps a standoff distance
+$\ge 0.128$ (interior minimum at $c=1.256$) --- the reinjection column
+re-enters the spiral plane at finite radius, and any homoclinic
+connection must lie off the one-parameter $c$-axis. For Naiad and
+Cassiopea the evidence for nearby homoclinic bifurcations is strong
+(returns at $10^{-4}$ of the attractor scale); none of this is a proof,
+and rigorous verification in the style of \citet{tucker2002} remains
+open.
 
 \subsection{Chaos strength is not monotonic in symmetry order}\label{sec:nonmonotonic}
-[Placeholder: $\lambda_1 = 0.294$ ($C_2$), $0.230$ ($C_3$), $0.523$ ($C_4$)
-as an open question.]
+
+Across the certified family, $\lambda_1 = 0.294$ ($C_2$), $0.230$
+($C_3$), $0.523$ ($C_4$): the four-fold member stretches more than twice
+as hard as the three-fold one, and the ordering is not monotonic in $n$.
+Proximity to homoclinicity does not explain the ordering either --- the
+two near-homoclinic members ($C_2$, $C_4$) bracket the standoff member
+($C_3$) in $\lambda_1$. Whether the cubic resonant coupling is
+intrinsically better at folding than the quadratic one, or Cassiopea
+merely occupies a luckier corner of its parameter box, is open; the
+archive's empty high-$\lambda_1$ cells at $n=5$ sharpen the question.
 
 \section{Limitations}\label{sec:limitations}
 [Placeholder: numerical (not rigorous) certification; dysts is 135 systems,
