@@ -133,10 +133,86 @@ for discovering chaotic flows. Our contributions:
 \end{enumerate}
 
 \section{Related work}\label{sec:related}
-[Placeholder: from docs/RELATED\_WORK.md -- symmetric chaos theory;
-equivariant 3-D flows that already exist (covers, Thomas, multi-scroll);
-the new-chaotic-system genre and its standards; automated discovery;
-catalogs and fingerprints; quality-diversity lineage.]
+
+\paragraph{Symmetric chaos.}
+Field and Golubitsky built chaotic planar \emph{maps} equivariant under
+cyclic, dihedral, and crystallographic groups --- the symmetric icons and
+quilts --- explicitly in pursuit of visual beauty
+\citep{fieldGolubitsky2009}; our family is a flow-analogue of that program.
+The algebra we use is theirs in the broader sense: for a planar system with
+$\mathbb{Z}_q$ rotation symmetry, the lowest-order non-axisymmetric
+equivariant term is the conjugate power $\conj{w}^{\,q-1}$
+\citep{golubitskyStewartSchaeffer1988}; we do not extend that theory, we
+deploy it globally as a polynomial ansatz. The admissible symmetry groups
+of attractors, and the distinction between instantaneous and time-averaged
+symmetry, were classified by \citet{melbourneDellnitzGolubitsky1993} and
+\citet{ashwinMelbourne1994}; our attractors carry the full $C_n$ symmetry
+on average.
+
+\paragraph{$C_n$-equivariant 3-D flows exist already.}
+Discrete rotational symmetry in three-dimensional chaos is not new, and
+our novelty claims are calibrated against that literature.
+\citet{mirandaStone1993} quotiented the Lorenz system to the
+``proto-Lorenz'' and lifted it to $n$-fold covers with $n$-eared
+attractors; \citet{letellierGilmore2001} and the monograph of
+\citet{gilmoreLetellier2007} developed the systematic theory of such
+cover/image systems. Thomas's cyclically symmetric system carries a
+three-fold rotation about the space diagonal \citep{thomas1999}, and the
+multi-scroll literature engineers rotationally arranged attractors at will
+\citep{luChen2006}, including modern rotation-symmetric multi-wing
+constructions around stable equilibria \citep{yang2021multiwing}. What
+separates our family from all of these: cover systems re-present the
+dynamics of a known image (away from the rotation axis a cover is locally
+diffeomorphic to its image, and the lifted vector field is generically
+singular on the axis), and multi-scroll systems are designed top-down with
+non-smooth nonlinearities. Our systems are single, globally polynomial,
+smooth vector fields, equivariant by construction rather than by lifting,
+not covers of anything catalogued, with the symmetry axis passing through
+the attractor's organizing saddle-focus --- and they were found by search,
+not built.
+
+\paragraph{The new-chaotic-system genre.}
+\citet{sprott1994} is the ancestor of automated chaotic-flow discovery;
+\citet{sprott2011} is the editorial corrective to the flood it unleashed,
+and the reason this is a methods paper. One-equilibrium chaotic flows are
+an established genre --- the minimal jerk flow \citep{sprott1997}, the
+one-stable-equilibrium system of \citet{wangChen2012}, and twenty-three
+relatives \citep{molaie2013} --- so a single equilibrium is not by itself
+remarkable; what matters here is the geometry, a saddle-focus whose 2-D
+unstable spiral and 1-D strongly stable axis organize the entire symmetric
+recirculation, the configuration of Shilnikov's theorem
+\citep{shilnikov1965}.
+
+\paragraph{Automated discovery of chaotic systems.}
+The lineage runs from Sprott's automatic aesthetic generation of map
+attractors \citep{sprott1993}, through genetic-algorithm acceleration
+\citep{goertzel1995}, to genetic programming over Lorenz-like vector
+fields maximizing $\lambda_1$ \citep{panDas2015}, and most recently the
+evolutionary generation of $2\times10^4$ chaotic ODEs as training data
+\citep{lai2025panda}. None of these searches for novelty against the
+published record; selection is chaoticity or chaos strength, and the
+output is a pile rather than a map. The nearest methodological neighbor
+outside dynamics is intrinsically-motivated discovery of diverse patterns
+in cellular automata \citep{reinke2020}.
+
+\paragraph{Catalogs and fingerprints.}
+\textsf{dysts} \citep{gilpin2021} supplies the reference set (135
+continuous systems in the version we fingerprint) with standardized
+integration; Gilpin's own feature-space embedding of the catalog is the
+closest precedent for our shape-space map, with the difference that our
+features are geometry-only point-cloud descriptors --- the D2 shape
+distribution of \citet{osada2002} plus PCA eigenvalue ratios and a fill
+factor --- rather than forecasting-oriented statistics.
+
+\paragraph{Quality-diversity.}
+Novelty search \citep{lehmanStanley2011}, MAP-Elites
+\citep{mouretClune2015}, and the QD framing \citep{pugh2016} come from
+evolutionary robotics. The domain transfer here is twofold: novelty is
+measured against a \emph{scientific catalog} rather than against the
+evolving population, and the archive's cells are indexed by a symmetry
+order, which makes the discrete group $C_n$ a searchable behavioral
+dimension. We found no prior application of QD or novelty search to the
+discovery of dynamical systems.
 
 \section{Method}\label{sec:method}
 
