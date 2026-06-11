@@ -217,20 +217,95 @@ discovery of dynamical systems.
 \section{Method}\label{sec:method}
 
 \subsection{The equivariant family}\label{sec:family}
-[Placeholder: complex form, why $\conj{w}^{\,n-1}$ is the resonant coupling,
-the three-part machine metaphor.]
+
+Write the horizontal coordinates of $\mathbb{R}^3$ as one complex number
+$w = x + iy$, so that a rotation of the plane by $2\pi/n$ is multiplication
+by $e^{2\pi i/n}$. The search family is
+\begin{equation}\label{eq:family}
+  \dot w = \bigl[\alpha(z-\beta) + i\omega\bigr]\,w
+           \;+\; \gamma\,\conj{w}^{\,n-1},
+  \qquad
+  \dot z = \mu + \nu z - z^{3} - \lambda\,|w|^{2},
+\end{equation}
+with seven real parameters
+$(\alpha,\beta,\omega,\gamma,\mu,\nu,\lambda)$ and a discrete rotation
+order $n \ge 2$. Under $w \mapsto e^{2\pi i/n} w$ the conjugate power
+transforms as $\conj{w}^{\,n-1} \mapsto e^{-2\pi i (n-1)/n}\conj{w}^{\,n-1}
+= e^{2\pi i/n}\conj{w}^{\,n-1}$, so every term of \eqref{eq:family} is
+equivariant: rotating a solution by $2\pi/n$ about the $z$-axis yields
+another solution. The coupling $\conj{w}^{\,n-1}$ is the lowest-order term
+with this property --- the standard $\mathbb{Z}_n$-resonant monomial of
+equivariant bifurcation theory \citep{golubitskyStewartSchaeffer1988} ---
+and it is the \emph{only} symmetry-breaking term in the family; everything
+else is axisymmetric.
+
+Read \eqref{eq:family} as a machine with three interlocking parts. The
+term $i\omega w$ spins the horizontal plane like a turntable. The term
+$\alpha(z-\beta)w$ makes the spin unstable or stable depending on
+altitude: above $z=\beta$ trajectories spiral outward, below it they are
+drawn back in. The vertical equation is a thermostat --- the cubic $-z^3$
+caps the altitude while $-\lambda|w|^2$ pushes $z$ down whenever
+trajectories wander far from the axis --- and the resonant term warps the
+circular spiral into an $n$-lobed one. On the axis $w=0$ the planar
+equations vanish and the equilibria are the real roots of
+$\mu + \nu z - z^3$; at every parameter set studied below there is exactly
+one, a saddle-focus whose unstable eigenplane is exactly the plane
+$z = z^\ast$ (the Jacobian is block diagonal there) and whose stable
+direction is the axis. Energy pumps in along the axis, spills outward, is
+reined back: the recirculating anatomy of Shilnikov-type chaos
+\citep{shilnikov1965}, with the symmetry painted on it.
+
+The search box is $\alpha\in[0.5,2.5]$, $\beta\in[-1,1.5]$,
+$\omega\in[1,4]$, $\gamma\in[0.3,2]$, $\mu\in[-1,2]$, $\nu\in[-1,2]$,
+$\lambda\in[0.5,3]$, with $n \in \{2,3,4,5\}$.
 
 \subsection{Batched evaluation and gates}\label{sec:eval}
-[Placeholder: vectorized complex RK4, escape/boundedness culling, two-orbit
-Benettin gate; throughput.]
+
+Candidates are evaluated in batches of 96 by a vectorized complex RK4
+integrator (step $dt=0.01$): an 8{,}000-step transient, then a
+25{,}000-step two-orbit Benettin estimate of the largest Lyapunov
+exponent (separation $10^{-8}$, renormalized every step), then a
+12{,}000-step orbit sample decimated to 1{,}500 points for
+fingerprinting. Orbits are culled as dead the moment any coordinate
+exceeds $50$ or goes non-finite; culling is checked every 200 steps so a
+diverging member of the batch cannot poison the rest. A candidate must
+survive the full evaluation with a largest exponent inside the archive's
+descriptor range (Section~\ref{sec:mapelites}) to be considered at all.
+The evaluator reproduces the independently computed Lyapunov exponent of
+the $C_3$ exhibit as a sanity check.
 
 \subsection{Shape fingerprints and catalog-grounded novelty}\label{sec:fingerprint}
-[Placeholder: D2 histograms + PCA ratios + fill factor; novelty = min
-distance to dysts + archive.]
+
+A fingerprint must be cheap and invariant to what does not matter:
+translation, scale, and rigid rotation. Each orbit sample is centered and
+normalized to unit RMS radius, then reduced to (i) the D2 shape
+distribution \citep{osada2002} --- the histogram, over 32 bins on
+$[0,3]$, of pairwise distances between 400 random orbit points, embedded
+by the Hellinger square root --- (ii) the PCA eigenvalue ratios
+$e_2/e_1$ and $e_3/e_1$ (how planar, how volumetric), and (iii) the
+occupied fraction of a $12^3$ grid over the bounding box (space-filling
+versus wiry). The distance between fingerprints is the Euclidean distance
+on the histogram block plus one half the Euclidean distance on the
+feature block. The novelty of a candidate is its minimum distance to a
+reference set containing the 135 fingerprinted systems of the
+\textsf{dysts} catalog \citep{gilpin2021} (higher-dimensional systems
+projected to their first three coordinates) \emph{plus every elite
+already in the archive}, so the search cannot rediscover itself.
+Section~\ref{sec:map} validates the metric and measures its noise floor.
 
 \subsection{The MAP-Elites archive}\label{sec:mapelites}
-[Placeholder: cells = symmetry order $\times$ $\lambda_1$ $\times$ vertical
-aspect; novelty as quality; mutation + fresh draws.]
+
+The archive's cells are triples (rotation order $n$; largest Lyapunov
+exponent, 7 bins with edges $0.05,0.10,0.15,0.20,0.27,0.35,0.45,0.60$;
+vertical aspect ratio of the orbit cloud, 5 bins with edges
+$0.2,0.4,0.6,0.85,1.2,2.0$) --- 140 cells in all. Within a cell,
+candidates compete on novelty alone: a newcomer replaces the incumbent
+only if its catalog-grounded novelty is higher, in the spirit of novelty
+search with local competition \citep{lehmanStanley2011,mouretClune2015}.
+Each generation draws half its batch as Gaussian mutations of random
+elites ($\sigma$ = 8\% of each parameter range, clipped to the box) and
+half as fresh uniform samples; the archive persists on disk across runs,
+so the search compounds.
 
 \section{Results}\label{sec:results}
 
