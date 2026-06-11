@@ -113,17 +113,60 @@ This interleaving matters for the certification, too: it shows the chaotic param
 
 Honesty requires the caveats. The novelty claim is a search claim: not found, rather than proven absent, in a literature too large for any search to exhaust. And the chaos certification is numerical. The Lyapunov exponents and the dimension are measurements with error bars, not theorems. A rigorous proof of chaos for this system, of the kind Warwick Tucker achieved for the Lorenz attractor in 2002 using computer-assisted interval arithmetic, does not exist and would be a genuine contribution.
 
+## The machine that hunts
+
+Aurelia was found by hand, in the sense that a human looked at renders and said yes, that one. The obvious next question was whether the looking could be industrialized. Not the taste, which stays human, but the searching.
+
+Two ingredients turned the one-off hunt into an engine. The first was a way to *measure* novelty instead of asserting it. Every attractor, known or candidate, gets reduced to a fingerprint: the histogram of pairwise distances between points on its normalized orbit (a classic shape signature, blind to rotation and scale), together with a few gross-anatomy numbers like how planar or how space-filling the cloud is. Against this, a reference library: the dysts catalog, William Gilpin's machine-readable collection of 135 chaotic systems from a century of literature, every Lorenz and Rössler and Sprott in one place. Novelty became a distance: how far is this candidate's fingerprint from the nearest thing anyone has ever seen?
+
+The metric promptly audited the original discovery. Asked for Aurelia's nearest known neighbor among all 135 systems, it answered: the Aizawa attractor, at distance 0.185. That is exactly the relative the qualitative analysis had named, found independently by arithmetic. And the distance is large: the catalog's own median nearest-neighbor spacing is 0.115, so by this ruler Aurelia sits farther from everything known than five-sixths of the known systems sit from each other.
+
+The second ingredient was a search algorithm that does not converge. Optimizers find one best thing; what was wanted here was an atlas of *different* things. The tool is MAP-Elites, a quality-diversity method: behavior space is tiled into cells (by symmetry order, chaos strength, and body shape), and each cell remembers the most novel specimen that ever landed in it. Mutants of the archive's elites and fresh random draws compete in batches, a whole population integrated simultaneously. The family Aurelia came from generalizes naturally: the conjugate term w̄^(n-1) imposes n-fold symmetry for any n, so the engine searched rotation orders two through five at once. In its first run it evaluated 4,608 candidate universes in 127 seconds and kept 62.
+
+## Naiad, the fountain
+
+The first thing worth keeping came from the two-fold family, and it taught a lesson about novelty on the way in.
+
+The archive's *most novel* two-fold specimen, distance 0.44 from everything known, turned out under full certification to be barely chaotic at all: its second Lyapunov exponent was negative and its dimension a hair above 2, a nearly-flat sheet wearing an exotic shape. Novelty search rewards weird, and weird includes degenerate. The certification battery is what disciplines the wishlist. The specimen that survived it, with a strongly positive exponent and the layered look of real chaos, scored 0.34: still more isolated in shape space than Aurelia itself, with its nearest known relative the SprottJerk system.
+
+![The Naiad attractor](gallery/naiad_hero.png)
+
+Rounded to clean constants, it became **Naiad**, named for the water nymphs of fountains and springs. At n = 2 the symmetry term is simply w̄, which in real coordinates is an anisotropic stretch: it feeds energy along one horizontal axis and drains it along the other, so the flow is symmetric only under a half-turn. The attractor is a fountain seen from the side, a wide turbulent bowl with a brilliant jet up the middle and a narrow stem below. Seen from above it is not a disk but a lens, the two-fold symmetry made visible as elongation.
+
+Its papers are in order: Lyapunov spectrum (+0.296, 0, −2.696), dimension 2.110, bounded over four million steps, dissipative. And the anatomy repeats: exactly one equilibrium, a saddle-focus on the axis at (0, 0, 1.651), spiraling out at rate 1.166 while rotating nearly three times faster than Aurelia's engine, with a contracting direction of −6.18 to catch what falls. Off-axis equilibria are not merely absent; the algebra forbids them, since they would require the rotation rate to be smaller than the stretch, and Naiad's parameters put it well above. One motionless point again, holding a fountain open forever.
+
+## Cassiopea, the star
+
+The four-fold family was searched the same night, and it produced the strongest chaos of the whole project.
+
+The winning candidate's exponent measured 0.490 raw. Rounding its seven constants to clean values did what rounding did for Aurelia, nudging the chaos *up*, to a certified λ₁ = 0.525: more than twice Aurelia's stretching rate, with the family's deepest fractal dimension, 2.218. At n = 4 the symmetry term is w̄³, the unique cubic that survives a quarter-turn of the plane. From above, the attractor is a four-armed pinwheel star with a white spiral core, like a star sapphire cut square. From the side, the familiar family silhouette: a layered bell, twin curtains, a bright jet.
+
+| The star from above | The bell from the side |
+|---|---|
+| ![Cassiopea star](gallery/cassiopea_star.png) | ![Cassiopea bell](gallery/cassiopea_bell.png) |
+
+The name is **Cassiopea**, and for once the biology cooperates completely. *Cassiopea* is the upside-down jellyfish, a real animal whose bell carries a four-leaf-clover marking: genuine four-fold symmetry, in a jellyfish, echoing a constellation. The lineage holds: moon jelly, water nymph, upside-down jelly. All three names were unclaimed.
+
+Cassiopea also broke the family's pattern in an instructive way. The equilibrium hunt first reported three fixed points: the usual saddle-focus engine on the axis at (0, 0, 1.611), plus two saddles far below the attractor. That count was impossible. A C₄-equivariant flow cannot have exactly two off-axis equilibria; rotating an equilibrium by ninety degrees must give another one, so they come in quadruples. The symmetry was auditing the numerics: the search box had been too small for equilibria sitting at radius three, and widening it produced the missing pair. Five equilibria in all, a central engine and a distant square of saddles, the first member of the family with any structure off the axis. The square sits far from the attractor and the dynamics never visit it, but its existence marks the four-fold family as algebraically richer terrain.
+
+By the fingerprint ruler, Cassiopea sits 0.224 from the nearest thing known (the Nose-Hoover oscillator), comfortably beyond the catalog's median spacing.
+
+So the family stands at three, ordered by symmetry: Naiad (C₂, λ₁ = 0.296), Aurelia (C₃, 0.233), Cassiopea (C₄, 0.525). Same skeleton in every case, a single saddle-focus pumping a bell-shaped recirculation; different symmetry group, different face. All three are in the [live viewer](https://sakeeb91.github.io/aurelia-attractor/), one switch apart.
+
 ## Open questions
 
-The afternoon that produced Aurelia left more questions than it answered.
+The day that produced this family left more questions than it answered.
 
-- **Does the Shilnikov criterion hold?** The saddle-focus eigenvalues satisfy |−5.558| > 1.432, the inequality in Shilnikov's theorem, but the theorem also requires a homoclinic orbit, a trajectory leaving the equilibrium and returning to it exactly. Numerically the reinjection comes close. Whether a true homoclinic connection exists at nearby parameters is open.
-- **Why do seven constants collapse to three?** The rounding may be a coincidence of this basin in parameter space, or the three-constant subfamily may be distinguished, perhaps the symmetric system maximizes stretching under some constraint. Nobody knows.
-- **Are there symmetry-broken siblings?** C₃-equivariant systems can host attractors that break the symmetry and come in conjugate triples, merging into a single symmetric attractor at a symmetry-restoring crisis. Whether Aurelia's parameter space contains such regimes, three small jellyfish orbiting where one now swims, is unexplored.
-- **The other hit.** The Monte-Carlo search produced a second chaotic universe, at λ ≈ 0.19, never examined beyond a thumbnail. It is still there, in the search script's output, waiting.
+- **Does the Shilnikov criterion hold?** In all three systems the saddle-focus eigenvalues satisfy the magnitude inequality in Shilnikov's theorem, but the theorem also requires a homoclinic orbit, a trajectory leaving the equilibrium and returning to it exactly. Numerically the reinjection comes close. Whether a true homoclinic connection exists at nearby parameters is open, for each member of the family.
+- **Why do seven constants collapse to three?** Aurelia's rounding may be a coincidence of its basin in parameter space, or the three-constant subfamily may be distinguished, perhaps the symmetric system maximizes stretching under some constraint. The pattern repeated for Cassiopea, where rounding raised the exponent again. Twice is suggestive; nobody knows.
+- **Why does the four-fold family stretch hardest?** Chaos strength is not monotonic in symmetry order (C₂ 0.296, C₃ 0.233, C₄ 0.525). Whether the cubic equivariant term is intrinsically better at folding, or Cassiopea just sits in a luckier corner of its parameter space, is unexplored.
+- **The five-fold gap.** The engine searched n = 5 too, and its five-fold elites were all weakly chaotic. Whether a strong five-pointed sibling exists, a starfish to complete the tide pool, likely needs a longer, targeted run.
+- **Are there symmetry-broken siblings?** Equivariant systems can host attractors that break the symmetry and come in conjugate families, merging into one symmetric attractor at a symmetry-restoring crisis. Whether these parameter spaces contain such regimes, three small jellyfish orbiting where one now swims, is unexplored.
+- **Does Cassiopea's saddle square matter?** Its four distant off-axis saddles never touch the attractor, but they may organize the boundary of its basin of attraction. Nobody has looked.
+- **The other hit.** The original Monte-Carlo search produced a second three-fold chaotic universe, at λ ≈ 0.19, never examined beyond a thumbnail. It is still there, in the search script's output, waiting.
 
-The equations fit on three lines. The object they contain has infinitely many layers, a fractional dimension, and the silhouette of a creature that has drifted through the oceans for five hundred million years. You can fly around it [in your browser](https://sakeeb91.github.io/aurelia-attractor/), or trace it yourself from twelve lines of Python in this repository. Either way, somewhere in the middle of it, the one motionless point is holding the whole thing together by pushing everything away.
+The equations fit on three lines apiece. The objects they contain have infinitely many layers, fractional dimensions, and the silhouettes of creatures that have drifted through the oceans for five hundred million years. You can fly around all three [in your browser](https://sakeeb91.github.io/aurelia-attractor/), one switch apart, or trace them yourself from a few lines of Python in this repository. Either way, somewhere in the middle of each one, a single motionless point is holding the whole thing together by pushing everything away.
 
 ---
 
-*All quantities cited are computed by the scripts in this repository: the Lyapunov spectrum and dimension by `scripts/verify_chaos.py`, the parameter sweep by `scripts/bifurcation_scan.py`, the discovery search by `scripts/search_parameters.py`, and the renders by `scripts/render_gallery.py`.*
+*All quantities cited are computed by the scripts in this repository: the Lyapunov spectra and dimensions by `scripts/verify_chaos.py`, `scripts/verify_naiad.py`, and `scripts/verify_cassiopea.py`; the parameter sweep by `scripts/bifurcation_scan.py`; the original discovery search by `scripts/search_parameters.py`; the quality-diversity engine by `scripts/run_atlas.py` over `atlas/`; and the renders by the `scripts/render_*.py` family.*
