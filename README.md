@@ -1,10 +1,10 @@
 # The Attractor Atlas
 
-*Three novel strange attractors — **Aurelia**, **Naiad**, and **Cassiopea** — discovered, certified, and named June 10, 2026, together with the quality-diversity engine that finds them. Aurelia, the moon jellyfish of the family, leads the tour.*
+*Four novel strange attractors — **Aurelia** (C₃), **Naiad** (C₂), **Cassiopea** (C₄), and **Mobula** (S₄ rotoreflection) — discovered, certified, and named in June 2026, together with the quality-diversity engine that finds them. They are the first entries in a [periodic table of strange attractors ordered by symmetry](docs/SYMMETRY_PROGRAM.md); Aurelia, the moon jellyfish of the family, leads the tour.*
 
-**[Explore all three live in your browser](https://sakeeb91.github.io/attractor-atlas/)**: a WebGL viewer with 400,000 orbit points, 3,000 particles riding the flow in real time, orbit controls, live parameter sliders, and a switcher between attractors.
+**[Explore all four live in your browser](https://sakeeb91.github.io/attractor-atlas/)**: a WebGL viewer with 400,000 orbit points, 3,000 particles riding the flow in real time, orbit controls, live parameter sliders, and a switcher between attractors.
 
-**[Read the story](STORY.md)**: a long-form narrative of the whole arc, from the failed first family through the 600-universe search and the certification of Aurelia, to the quality-diversity engine that went on to find its siblings Naiad and Cassiopea.
+**[Read the story](STORY.md)**: a long-form narrative of the whole arc, from the failed first family through the 600-universe search and the certification of Aurelia, to the quality-diversity engine that found its siblings Naiad and Cassiopea, and on to Mobula — the first member whose symmetry is a rotation-plus-reflection.
 
 ![The Aurelia attractor](gallery/aurelia_hero.png)
 
@@ -249,6 +249,58 @@ first member with off-axis equilibria: four distant saddles at radius 3,
 arranged in a square far below the attractor, with the familiar single
 saddle-focus engine on the axis.
 
+## Mobula: the rotoreflection member
+
+The three jellyfish above are all symmetric under a pure **rotation**. **Mobula**
+breaks that series: it is the first member symmetric under an *improper*
+operation — a quarter-turn **combined with a vertical flip**,
+`σ: (w, z) → (i·w, −z)`, and under neither the quarter-turn nor the flip alone.
+This is the order-4 rotoreflection group **S₄** (Schoenflies), the point-group
+symmetry of a devil ray (genus *Mobula*) breaching and somersaulting clear of
+the water. From the side the attractor is a **broad-winged ray of layered
+veils**; from above, a **four-fold pinwheel**. Two terms make the symmetry S₄
+rather than C₄: `δ·z·conj(w)` and `ε·Im(w²)` — each allowed under the
+rotoreflection but forbidden under the pure quarter-turn.
+
+A targeted [literature strike](docs/RELATED_WORK.md) found no prior *constructed,
+certified chaotic flow* whose attractor carries a rotoreflection symmetry that
+is neither an inversion nor a reflection: the map literature (Reiter et al.) and
+the order-2 inversion covers (Letellier–Gilmore) are the nearest prior art.
+
+![The Mobula attractor](gallery/mobula_hero.png)
+
+| The pinwheel (top) | The wing (side) |
+|---|---|
+| ![Mobula pinwheel](gallery/mobula_pinwheel.png) | ![Mobula wing](gallery/mobula_wing.png) |
+
+```
+dx/dt = (α·z² − β + δ·z)x − ω·y + γ(x³ − 3xy²)    α=1.4104, β=0.6701,
+dy/dt = (α·z² − β − δ·z)y + ω·x + γ(y³ − 3x²y)     ω=2.4266, γ=0.3, δ=0.5534,
+dz/dt = ν·z − z³ − λ·z(x² + y²) + 2ε·xy            ν=3.3, λ=2.1355, ε=1.2153
+```
+
+Equivariance is **unit-tested numerically** (`tests/`): the real-coordinate flow
+above is checked to equal the complex S₄ family to 10⁻¹², and to *break* C₄ and
+the pure flip. Certified via `python scripts/verify_mobula.py`
+([`results/mobula_verification.json`](results/mobula_verification.json)):
+
+| Property | Value |
+|---|---|
+| Lyapunov spectrum | **λ₁ = +0.330**, λ₂ ≈ 0, λ₃ = −1.238 |
+| Kaplan–Yorke dimension | **D_KY ≈ 2.266** |
+| λ₁ across 5 random initial conditions | 0.334 … 0.384 (always positive) |
+| Equilibria | on-axis σ-conjugate pair (0, 0, ±1.817) with *identical* eigenvalues, plus four off-axis saddles forming one order-4 σ-orbit |
+| Eigenvalues at (0,0,±1.817) | 3.984 ± 2.21i (unstable spiral), −6.6 |
+| S₄ symmetry residual | 0.0136, versus 0.0455 for a pure-flip control (3.3× better) — genuine rotoreflection, not flip symmetry |
+| Novelty vs the dysts catalog | nearest known system NuclearQuadrupole at distance 0.273 |
+
+The family's chaos strength is **not monotonic in symmetry order**
+(λ₁: C₂ 0.296, C₃ 0.233, C₄ 0.525, S₄ 0.330) — the systematic question the
+[symmetry program](docs/SYMMETRY_PROGRAM.md) sets out to map. Because S₄ forbids
+a constant in `dz/dt`, Mobula's on-axis equilibria are the *symmetric* triple
+`z(ν − z²) = 0`, and the symmetry is visible in the fixed-point structure: σ
+exchanges the two off-axis-z equilibria and they carry identical eigenvalues.
+
 ## Reproduce everything
 
 ```bash
@@ -262,6 +314,9 @@ python scripts/verify_naiad.py        # certify Naiad, write results/naiad_verif
 python scripts/render_naiad.py        # render the Naiad gallery
 python scripts/verify_cassiopea.py    # certify Cassiopea
 python scripts/render_cassiopea.py    # render the Cassiopea gallery
+python scripts/verify_mobula.py       # certify Mobula (S4 rotoreflection)
+python scripts/render_mobula.py       # render the Mobula gallery
+python -m pytest tests/               # numerical equivariance + cross-check tests
 ```
 
 Or use it as a library:
