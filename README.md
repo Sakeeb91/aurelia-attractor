@@ -1,8 +1,8 @@
-# The Aurelia Attractor
+# The Attractor Atlas
 
-*A novel strange attractor with the silhouette of a moon jellyfish — discovered, certified, and named June 10, 2026.*
+*Three novel strange attractors — **Aurelia**, **Naiad**, and **Cassiopea** — discovered, certified, and named June 10, 2026, together with the quality-diversity engine that finds them. Aurelia, the moon jellyfish of the family, leads the tour.*
 
-**[Explore it live in your browser](https://sakeeb91.github.io/aurelia-attractor/)**: a WebGL viewer with 400,000 orbit points, 3,000 particles riding the flow in real time, orbit controls, and live parameter sliders.
+**[Explore all three live in your browser](https://sakeeb91.github.io/attractor-atlas/)**: a WebGL viewer with 400,000 orbit points, 3,000 particles riding the flow in real time, orbit controls, live parameter sliders, and a switcher between attractors.
 
 **[Read the story](STORY.md)**: a long-form narrative of the whole arc, from the failed first family through the 600-universe search and the certification of Aurelia, to the quality-diversity engine that went on to find its siblings Naiad and Cassiopea.
 

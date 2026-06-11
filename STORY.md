@@ -105,7 +105,7 @@ Chaos is not the system's only mood. Hold a and b fixed and sweep the rotation r
 
 Below c ≈ 1.40, the exponent hugs zero: the system settles into limit cycles, closed loops of perfectly periodic motion, the fate Lorenz's predecessors expected of all differential equations. At c ≈ 1.40 chaos ignites, burning through a band to about 1.62 before collapsing back to periodicity. A second, broader chaotic continent runs from about 1.81 to 2.33, and the canonical c = 1.9 sits comfortably inside it. Within each band, narrow periodic windows slice through, places where the chaos momentarily crystallizes into order before dissolving again, the same alternation famously found in the logistic map. Past 2.33 the system retires into limit cycles for good, save for one last flicker of chaos near c = 2.40.
 
-This interleaving matters for the certification, too: it shows the chaotic parameter set is robust, a band rather than a knife-edge, which is why small perturbations of the sliders in the [live viewer](https://sakeeb91.github.io/aurelia-attractor/) bend the jellyfish without killing it.
+This interleaving matters for the certification, too: it shows the chaotic parameter set is robust, a band rather than a knife-edge, which is why small perturbations of the sliders in the [live viewer](https://sakeeb91.github.io/attractor-atlas/) bend the jellyfish without killing it.
 
 ## The name
 
@@ -151,7 +151,7 @@ Cassiopea also broke the family's pattern in an instructive way. The equilibrium
 
 By the fingerprint ruler, Cassiopea sits 0.224 from the nearest thing known (the Nose-Hoover oscillator), comfortably beyond the catalog's median spacing.
 
-So the family stands at three, ordered by symmetry: Naiad (C₂, λ₁ = 0.296), Aurelia (C₃, 0.233), Cassiopea (C₄, 0.525). Same skeleton in every case, a single saddle-focus pumping a bell-shaped recirculation; different symmetry group, different face. All three are in the [live viewer](https://sakeeb91.github.io/aurelia-attractor/), one switch apart.
+So the family stands at three, ordered by symmetry: Naiad (C₂, λ₁ = 0.296), Aurelia (C₃, 0.233), Cassiopea (C₄, 0.525). Same skeleton in every case, a single saddle-focus pumping a bell-shaped recirculation; different symmetry group, different face. All three are in the [live viewer](https://sakeeb91.github.io/attractor-atlas/), one switch apart.
 
 ## Open questions
 
@@ -165,7 +165,7 @@ The day that produced this family left more questions than it answered.
 - **Does Cassiopea's saddle square matter?** Its four distant off-axis saddles never touch the attractor, but they may organize the boundary of its basin of attraction. Nobody has looked.
 - **The other hit.** The original Monte-Carlo search produced a second three-fold chaotic universe, at λ ≈ 0.19, never examined beyond a thumbnail. It is still there, in the search script's output, waiting.
 
-The equations fit on three lines apiece. The objects they contain have infinitely many layers, fractional dimensions, and the silhouettes of creatures that have drifted through the oceans for five hundred million years. You can fly around all three [in your browser](https://sakeeb91.github.io/aurelia-attractor/), one switch apart, or trace them yourself from a few lines of Python in this repository. Either way, somewhere in the middle of each one, a single motionless point is holding the whole thing together by pushing everything away.
+The equations fit on three lines apiece. The objects they contain have infinitely many layers, fractional dimensions, and the silhouettes of creatures that have drifted through the oceans for five hundred million years. You can fly around all three [in your browser](https://sakeeb91.github.io/attractor-atlas/), one switch apart, or trace them yourself from a few lines of Python in this repository. Either way, somewhere in the middle of each one, a single motionless point is holding the whole thing together by pushing everything away.
 
 ---
 
