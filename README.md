@@ -73,6 +73,7 @@ All numbers below are reproducible with `python scripts/verify_chaos.py`
 | Lyapunov spectrum (Benettin/QR, 600k steps) | **λ₁ = +0.2327**, λ₂ = +0.0013 ≈ 0, λ₃ = −1.5119 |
 | Kaplan–Yorke dimension | **D_KY ≈ 2.155** (fractal) |
 | λ₁ across 5 random initial conditions | 0.195 … 0.252 (always positive) |
+| Convergence study (3 dt × 3 lengths × 10 ICs) | λ₁ = +0.230 ± 0.009, D_KY = 2.151 ± 0.006 ([gallery/convergence.png](gallery/convergence.png), [results/convergence.json](results/convergence.json)) |
 | Equilibria | exactly one: saddle-focus at (0, 0, 1.5229) |
 | Eigenvalues at the equilibrium | 1.432 ± 1.9i (unstable spiral), −5.558 (strong contraction) |
 | Boundedness | confirmed over 4,000,000 RK4 steps |
@@ -100,6 +101,23 @@ to a stable limit cycle; where it is positive, chaos reigns. The canonical
 
 ![Bifurcation scan](gallery/bifurcation.png)
 
+### The homoclinic hunt
+
+Shilnikov's theorem needs two things: the eigenvalue inequality (satisfied by
+all three systems, saddle index ν = 0.19–0.26 < 1) and a homoclinic orbit —
+the unstable manifold returning exactly to the equilibrium. A shooting hunt
+(`python scripts/homoclinic_hunt.py`) launches the manifold from the unstable
+eigenplane and sweeps the rotation rate. **Naiad**'s manifold returns to
+within **7.5×10⁻⁵** of its saddle-focus at w_rot = 1.833, with a ladder of
+seven near-connection windows accumulating below the canonical parameter
+(where the distance is still 7.6×10⁻⁴). **Cassiopea**'s returns to within
+6.5×10⁻⁴. For those two, homoclinic (Shilnikov) bifurcations almost certainly
+thread the family. **Aurelia** is the holdout: along the entire c-band its
+manifold keeps a standoff distance of ≈0.13 — the reinjection column re-enters
+the spiral plane at finite radius, and any connection must lie off the c-axis.
+
+![Homoclinic hunt](gallery/homoclinic.png)
+
 ## Novelty
 
 Searched June 10, 2026, before publication:
@@ -109,15 +127,25 @@ Searched June 10, 2026, before publication:
   dynamics through `|w|²` — does not appear in the known attractor catalogues
   (Lorenz, Rössler, Thomas, Aizawa/Langford, Halvorsen, Dadras, Chen, Sprott A–S,
   Rabinovich–Fabrikant, multi-scroll/multi-wing families) or in web/literature
-  searches for the equation terms.
+  searches for the equation terms. (Full positioning pass against the
+  equivariant-covers, multi-scroll, and normal-form literature:
+  [docs/RELATED_WORK.md](docs/RELATED_WORK.md).)
 * **Closest relatives, and how this differs:** Field & Golubitsky's celebrated
   *symmetric chaos icons* use equivariant polynomial couplings of the same spirit —
   but they are 2-D discrete **maps**, not continuous 3-D flows. The Aizawa/Langford
   attractor is a 3-D flow with rotational coupling — but it is SO(2)-symmetric
   (continuous rotation), has no equivariant `w̄²` term, and has a qualitatively
-  different two-equilibrium structure. The Aurelia system occupies the unexplored
-  intersection: *continuous flow* × *discrete C₃ equivariance* × *single
-  saddle-focus*.
+  different two-equilibrium structure. Discrete Cₙ rotation symmetry *does* occur
+  in published 3-D flows — the proto-Lorenz n-fold covers of Miranda & Stone, the
+  cover-system theory of Gilmore & Letellier, Thomas's cyclically symmetric system,
+  and the engineered multi-scroll families — but in all of these the symmetry is
+  either imposed by lifting known dynamics through an angle-multiplying map
+  (leaving the vector field singular on the axis and the dynamics locally identical
+  to the image system) or acts without Aurelia's plane-plus-axis anatomy. The
+  Aurelia system occupies a sparsely populated intersection: *globally polynomial
+  flow* × *discrete C₃ equivariance by construction, not by covering* × *single
+  organizing saddle-focus*. Full survey:
+  [docs/RELATED_WORK.md](docs/RELATED_WORK.md).
 * **The name** "Aurelia attractor" had no prior usage.
 * **Measured novelty.** Beyond the literature search, novelty is now a number:
   reducing attractors to shape fingerprints (D2 distance histograms + PCA shape
@@ -128,14 +156,25 @@ Searched June 10, 2026, before publication:
   83% of known systems sit closer to something known than Aurelia does. By
   this metric, Aurelia is more isolated in shape space than five-sixths of
   the established bestiary, and its nearest relative is exactly the system
-  the qualitative analysis predicted.
+  the qualitative analysis predicted. The metric itself is validated in
+  `scripts/validate_fingerprint.py`: documented Lorenz-family variants
+  cluster (positive control), the algebraically defined Sprott family does
+  not (negative control — the fingerprint reads geometry, not algebra), and
+  the within-system noise floor is ≈0.05, putting all three of our systems
+  3–5 noise floors from anything known. Under re-simulation Aurelia's
+  distance is stable at 0.184, with the InteriorSquirmer system
+  statistically tied with Aizawa — at this isolation, ties between distant
+  neighbors are expected.
+  Map: [gallery/fingerprint_map.png](gallery/fingerprint_map.png) ·
+  details: [results/fingerprint_validation.json](results/fingerprint_validation.json).
 
 ## Discovery method
 
 The attractor was found by Monte-Carlo search over a seven-parameter
 C₃-equivariant family (`python scripts/search_parameters.py`), filtering for
 bounded orbits with a strongly positive largest Lyapunov exponent, then judged by
-eye for beauty. The winning region of parameter space collapsed — remarkably — to
+eye for beauty — a workflow whose ancestor is Sprott's automated aesthetic hunt
+over 2-D maps in 1993. The winning region of parameter space collapsed — remarkably — to
 just **three distinct constants** (a, b, c) = (1.4, 0.5, 1.9) with the largest
 Lyapunov exponent essentially unchanged.
 
@@ -154,6 +193,20 @@ is reduced to a shape fingerprint (D2 pairwise-distance histogram + PCA shape
 ratios + fill factor), and its novelty is the minimum fingerprint distance to
 the [dysts](https://github.com/williamgilpin/dysts) catalog of known chaotic
 systems plus everything already discovered in the archive.
+
+Evolved chaotic flows exist in the literature — genetic programming over
+Lorenz-like vector fields (Pan & Das 2015), and most recently the 20,000-system
+Panda corpus bred from the dysts catalog as training data (Lai, Bao & Gilpin
+2025) — but, to our knowledge, this is the first *quality-diversity* search over
+a family of dynamical systems, with novelty measured against a catalog of known
+attractors rather than chaos strength optimized
+([docs/RELATED_WORK.md](docs/RELATED_WORK.md)).
+
+The whole shape space at a glance — the dysts catalog as dots, the three
+discoveries as stars on the rim of the known cloud (metric MDS of
+fingerprint distances, Kruskal stress-1 = 0.13):
+
+![Shape space of known attractors with the three new systems](gallery/fingerprint_map.png)
 
 ```bash
 pip install dysts                                # reference catalog (one-time)
@@ -198,15 +251,16 @@ recorded in [`results/naiad_verification.json`](results/naiad_verification.json)
 | Lyapunov spectrum | **λ₁ = +0.296**, λ₂ = +0.001 ≈ 0, λ₃ = −2.696 |
 | Kaplan–Yorke dimension | **D_KY ≈ 2.110** |
 | λ₁ across 5 random initial conditions | 0.284 … 0.341 (always positive) |
+| Convergence study (3 dt × 3 lengths × 10 ICs) | λ₁ = +0.294 ± 0.009, D_KY = 2.110 ± 0.004 |
 | Equilibria | exactly one: saddle-focus at (0, 0, 1.651) |
 | Eigenvalues at the equilibrium | 1.166 ± 3.286i (unstable spiral), −6.18 |
 | Time-averaged divergence | −2.386 (dissipative) |
-| Novelty vs the dysts catalog | nearest known system **SprottJerk at distance 0.34** |
+| Novelty vs the dysts catalog | nearest known system at distance **0.29–0.34** across re-simulations (the rank-1 identity flips between SprottJerk and ForcedFitzHughNagumo at this isolation) |
 
-That novelty distance of 0.34 makes Naiad *more* isolated in shape space than
-Aurelia (0.185), against a catalog whose median nearest-neighbor spacing is
-0.115. Like Aurelia, it is organized by a single Shilnikov-type saddle-focus,
-here with a faster spiral.
+That novelty distance of ≈0.3 makes Naiad the *most* isolated member of the
+family in shape space (Aurelia sits at 0.18), against a catalog whose median
+nearest-neighbor spacing is 0.115. Like Aurelia, it is organized by a single
+Shilnikov-type saddle-focus, here with a faster spiral.
 
 ## Cassiopea: the four-fold member
 
@@ -238,10 +292,11 @@ Certified via `python scripts/verify_cassiopea.py`
 | Lyapunov spectrum | **λ₁ = +0.525**, λ₂ ≈ 0, λ₃ = −2.412 |
 | Kaplan–Yorke dimension | **D_KY ≈ 2.218** |
 | λ₁ across 5 random initial conditions | 0.490 … 0.555 (always positive) |
+| Convergence study (3 dt × 3 lengths × 10 ICs) | λ₁ = +0.523 ± 0.008, D_KY = 2.219 ± 0.006 |
 | Equilibria | a central saddle-focus at (0, 0, 1.611) plus a C₄ quadruple of distant saddles |
 | Eigenvalues at the saddle-focus | 1.522 ± 1.8i (unstable spiral), −5.984 |
 | Time-averaged divergence | −1.868 (dissipative) |
-| Novelty vs the dysts catalog | nearest known system NoseHoover at distance 0.224 |
+| Novelty vs the dysts catalog | nearest known system NoseHoover at distance **0.17–0.22** across re-simulations (Aizawa statistically tied) |
 
 Cassiopea carries the **strongest chaos and deepest fractal structure of the
 family** (Aurelia λ₁ = 0.233, Naiad 0.296, Cassiopea 0.525), and it is the
@@ -316,6 +371,9 @@ python scripts/verify_cassiopea.py    # certify Cassiopea
 python scripts/render_cassiopea.py    # render the Cassiopea gallery
 python scripts/verify_mobula.py       # certify Mobula (S4 rotoreflection)
 python scripts/render_mobula.py       # render the Mobula gallery
+python scripts/convergence_study.py   # error-barred Lyapunov spectra
+python scripts/validate_fingerprint.py # validate the novelty metric, draw the shape map
+python scripts/homoclinic_hunt.py     # hunt Shilnikov homoclinic connections
 python -m pytest tests/               # numerical equivariance + cross-check tests
 ```
 

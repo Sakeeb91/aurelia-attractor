@@ -1,0 +1,594 @@
+% The Attractor Atlas - methods paper.
+% Venue-agnostic skeleton: plain article + natbib. Switch to ACM sigconf
+% (GECCO) or the AIP template (Chaos) at submission time.
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+\graphicspath{{../gallery/}}
+
+\newcommand{\dky}{D_{\mathrm{KY}}}
+\newcommand{\conj}[1]{\bar{#1}}
+
+\title{Quality-Diversity Search with Catalog-Grounded Novelty\\
+Discovers Families of Equivariant Strange Attractors}
+\author{Sakeeb Rahman\thanks{Code, data, and an interactive viewer:
+\url{https://github.com/Sakeeb91/attractor-atlas},
+\url{https://sakeeb91.github.io/attractor-atlas/}.}}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Random search has been generating chaotic systems since the early 1990s, and
+evolutionary methods now breed them by the tens of thousands; what neither
+provides is a reason to look at any particular specimen. We describe a
+search whose objective is \emph{measured difference from everything already
+known}: a quality-diversity (MAP-Elites) loop over a $C_n$-equivariant
+family of three-dimensional polynomial flows, in which each candidate orbit
+is reduced to a geometry-only shape fingerprint and scored by its distance
+to the 135-system \textsf{dysts} catalog of published chaotic attractors.
+Cells of the archive are indexed by symmetry order, Lyapunov exponent, and
+body aspect, so the search illuminates the family rather than converging.
+A first run evaluated 4{,}608 candidate systems in 127 seconds and retained
+62 elites. We certify three exhibits --- Naiad ($C_2$), Aurelia ($C_3$),
+and Cassiopea ($C_4$) --- with full Lyapunov spectra and error bars
+($\lambda_1 = 0.294\pm0.009$, $0.230\pm0.009$, $0.523\pm0.008$), fractal
+dimensions, equilibrium analyses, bifurcation scans, and a homoclinic hunt
+that finds near-Shilnikov connections (return distances down to
+$7.5\times10^{-5}$) threading two of the three. We validate the fingerprint
+metric itself with positive and negative controls and an explicit noise
+floor; all three systems sit 3--5 noise floors from anything in the
+catalog. The exhibits are evidence for the method: catalog-grounded novelty
+turns ``yet another chaotic system'' into a measurable, falsifiable claim
+of isolation in shape space.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+Strange attractors have been discovered mostly one at a time. Lorenz found
+his by accident in a truncated convection model \citep{lorenz1963}; for
+three decades afterwards each new chaotic flow was an event, named for its
+finder. Sprott industrialized the process in 1994 by integrating millions
+of random quadratic systems and keeping the nineteen algebraically simplest
+chaotic ones \citep{sprott1994}, having already automated the analogous
+hunt over two-dimensional maps with an explicitly aesthetic filter
+\citep{sprott1993}. The genre this spawned eventually saturated: so many
+cosmetic variants of known systems were published that Sprott himself
+proposed editorial standards --- a new chaotic system should be simpler
+than anything known with the same behavior, or show behavior of genuine
+scientific interest \citep{sprott2011}. Modern evolutionary methods have
+only widened the firehose: genetic programming evolves hundreds of
+Lorenz-like variants by maximizing the largest Lyapunov exponent
+\citep{panDas2015}, and the Panda corpus bred $2\times10^4$ chaotic
+ordinary differential equations from catalog seeds as training data for a
+forecasting foundation model \citep{lai2025panda}. Generating chaotic
+systems is cheap. What remains expensive is a \emph{reason to look at any
+particular one}.
+
+This paper proposes that the missing objective is measured novelty. The
+machine-readable \textsf{dysts} catalog \citep{gilpin2021} collects 135
+published chaotic systems --- a century of the bestiary in one place ---
+and makes a new kind of search target possible: not ``is this chaotic?''
+(easy, and no longer interesting on its own) but ``how far is this, as a
+geometric object, from everything anyone has published?'' We reduce every
+candidate attractor to a cheap shape fingerprint (a D2 pairwise-distance
+histogram \citep{osada2002} plus gross-anatomy features), define novelty
+as the minimum fingerprint distance to the catalog, and make that number
+the selection signal.
+
+The second ingredient is a search algorithm that does not converge.
+Optimizing novelty alone collapses easily onto degenerate weirdness ---
+our own first run surfaced a nearly flat, barely chaotic sheet as its most
+novel specimen --- and optimizing chaos strength alone reproduces the
+firehose. Quality-diversity methods \citep{lehmanStanley2011,pugh2016},
+specifically MAP-Elites \citep{mouretClune2015}, hold a map of cells and
+keep the best specimen per cell; we index cells by symmetry order,
+Lyapunov exponent, and body aspect, so the output is an \emph{atlas} of
+distinct, certified, maximally unfamiliar attractors rather than one
+optimum.
+
+The third ingredient is structure. Rather than searching free-form
+equations, we search a single $C_n$-equivariant family of
+three-dimensional polynomial flows (Section~\ref{sec:family}), built from
+the unique resonant coupling $\gamma\conj{w}^{\,n-1}$ of equivariant
+bifurcation theory \citep{golubitskyStewartSchaeffer1988} joined to cubic
+axial dynamics. The family is parameterized by the rotation order $n$, so
+two-, three-, four-, and five-fold symmetric attractors live in one
+seven-dimensional parameter box, and every find inherits an interpretable
+anatomy: a single on-axis saddle-focus whose unstable spiral plane and
+strongly stable axis organize a symmetric recirculation.
+
+We present three certified exhibits --- Naiad ($C_2$), Aurelia ($C_3$),
+Cassiopea ($C_4$) --- but we emphasize that, per Sprott's standard, the
+exhibits are not the claim. The claim is the method: to our knowledge this
+is the first quality-diversity search over a family of dynamical systems,
+and the first use of catalog-grounded novelty as the selection objective
+for discovering chaotic flows. Our contributions:
+\begin{enumerate}
+  \item a novelty objective grounded in a scientific catalog, with the
+        metric itself validated by positive and negative controls and an
+        explicit noise floor (Section~\ref{sec:map});
+  \item an equivariant polynomial ansatz that turns symmetry order into a
+        searchable discrete dimension (Section~\ref{sec:family});
+  \item a MAP-Elites archive over symmetry $\times$ dynamics descriptors
+        with a batched evaluator (4{,}608 candidates in 127\,s on a
+        laptop; Section~\ref{sec:run});
+  \item a certification standard for machine-discovered systems: full
+        spectra with error bars over integrator settings and initial
+        conditions, equilibrium analysis, bifurcation scans, and a
+        homoclinic hunt (Sections~\ref{sec:convergence}--\ref{sec:shilnikov});
+  \item three certified, named exhibits and two measured surprises ---
+        chaos strength is not monotonic in symmetry order, and
+        near-homoclinic Shilnikov windows thread two of the three
+        families (Section~\ref{sec:nonmonotonic}).
+\end{enumerate}
+
+\section{Related work}\label{sec:related}
+
+\paragraph{Symmetric chaos.}
+Field and Golubitsky built chaotic planar \emph{maps} equivariant under
+cyclic, dihedral, and crystallographic groups --- the symmetric icons and
+quilts --- explicitly in pursuit of visual beauty
+\citep{fieldGolubitsky2009}; our family is a flow-analogue of that program.
+The algebra we use is theirs in the broader sense: for a planar system with
+$\mathbb{Z}_q$ rotation symmetry, the lowest-order non-axisymmetric
+equivariant term is the conjugate power $\conj{w}^{\,q-1}$
+\citep{golubitskyStewartSchaeffer1988}; we do not extend that theory, we
+deploy it globally as a polynomial ansatz. The admissible symmetry groups
+of attractors, and the distinction between instantaneous and time-averaged
+symmetry, were classified by \citet{melbourneDellnitzGolubitsky1993} and
+\citet{ashwinMelbourne1994}; our attractors carry the full $C_n$ symmetry
+on average.
+
+\paragraph{$C_n$-equivariant 3-D flows exist already.}
+Discrete rotational symmetry in three-dimensional chaos is not new, and
+our novelty claims are calibrated against that literature.
+\citet{mirandaStone1993} quotiented the Lorenz system to the
+``proto-Lorenz'' and lifted it to $n$-fold covers with $n$-eared
+attractors; \citet{letellierGilmore2001} and the monograph of
+\citet{gilmoreLetellier2007} developed the systematic theory of such
+cover/image systems. Thomas's cyclically symmetric system carries a
+three-fold rotation about the space diagonal \citep{thomas1999}, and the
+multi-scroll literature engineers rotationally arranged attractors at will
+\citep{luChen2006}, including modern rotation-symmetric multi-wing
+constructions around stable equilibria \citep{yang2021multiwing}. What
+separates our family from all of these: cover systems re-present the
+dynamics of a known image (away from the rotation axis a cover is locally
+diffeomorphic to its image, and the lifted vector field is generically
+singular on the axis), and multi-scroll systems are designed top-down with
+non-smooth nonlinearities. Our systems are single, globally polynomial,
+smooth vector fields, equivariant by construction rather than by lifting,
+not covers of anything catalogued, with the symmetry axis passing through
+the attractor's organizing saddle-focus --- and they were found by search,
+not built.
+
+\paragraph{The new-chaotic-system genre.}
+\citet{sprott1994} is the ancestor of automated chaotic-flow discovery;
+\citet{sprott2011} is the editorial corrective to the flood it unleashed,
+and the reason this is a methods paper. One-equilibrium chaotic flows are
+an established genre --- the minimal jerk flow \citep{sprott1997}, the
+one-stable-equilibrium system of \citet{wangChen2012}, and twenty-three
+relatives \citep{molaie2013} --- so a single equilibrium is not by itself
+remarkable; what matters here is the geometry, a saddle-focus whose 2-D
+unstable spiral and 1-D strongly stable axis organize the entire symmetric
+recirculation, the configuration of Shilnikov's theorem
+\citep{shilnikov1965}.
+
+\paragraph{Automated discovery of chaotic systems.}
+The lineage runs from Sprott's automatic aesthetic generation of map
+attractors \citep{sprott1993}, through genetic-algorithm acceleration
+\citep{goertzel1995}, to genetic programming over Lorenz-like vector
+fields maximizing $\lambda_1$ \citep{panDas2015}, and most recently the
+evolutionary generation of $2\times10^4$ chaotic ODEs as training data
+\citep{lai2025panda}. None of these searches for novelty against the
+published record; selection is chaoticity or chaos strength, and the
+output is a pile rather than a map. The nearest methodological neighbor
+outside dynamics is intrinsically-motivated discovery of diverse patterns
+in cellular automata \citep{reinke2020}.
+
+\paragraph{Catalogs and fingerprints.}
+\textsf{dysts} \citep{gilpin2021} supplies the reference set (135
+continuous systems in the version we fingerprint) with standardized
+integration; Gilpin's own feature-space embedding of the catalog is the
+closest precedent for our shape-space map, with the difference that our
+features are geometry-only point-cloud descriptors --- the D2 shape
+distribution of \citet{osada2002} plus PCA eigenvalue ratios and a fill
+factor --- rather than forecasting-oriented statistics.
+
+\paragraph{Quality-diversity.}
+Novelty search \citep{lehmanStanley2011}, MAP-Elites
+\citep{mouretClune2015}, and the QD framing \citep{pugh2016} come from
+evolutionary robotics. The domain transfer here is twofold: novelty is
+measured against a \emph{scientific catalog} rather than against the
+evolving population, and the archive's cells are indexed by a symmetry
+order, which makes the discrete group $C_n$ a searchable behavioral
+dimension. We found no prior application of QD or novelty search to the
+discovery of dynamical systems.
+
+\section{Method}\label{sec:method}
+
+\subsection{The equivariant family}\label{sec:family}
+
+Write the horizontal coordinates of $\mathbb{R}^3$ as one complex number
+$w = x + iy$, so that a rotation of the plane by $2\pi/n$ is multiplication
+by $e^{2\pi i/n}$. The search family is
+\begin{equation}\label{eq:family}
+  \dot w = \bigl[\alpha(z-\beta) + i\omega\bigr]\,w
+           \;+\; \gamma\,\conj{w}^{\,n-1},
+  \qquad
+  \dot z = \mu + \nu z - z^{3} - \lambda\,|w|^{2},
+\end{equation}
+with seven real parameters
+$(\alpha,\beta,\omega,\gamma,\mu,\nu,\lambda)$ and a discrete rotation
+order $n \ge 2$. Under $w \mapsto e^{2\pi i/n} w$ the conjugate power
+transforms as $\conj{w}^{\,n-1} \mapsto e^{-2\pi i (n-1)/n}\conj{w}^{\,n-1}
+= e^{2\pi i/n}\conj{w}^{\,n-1}$, so every term of \eqref{eq:family} is
+equivariant: rotating a solution by $2\pi/n$ about the $z$-axis yields
+another solution. The coupling $\conj{w}^{\,n-1}$ is the lowest-order term
+with this property --- the standard $\mathbb{Z}_n$-resonant monomial of
+equivariant bifurcation theory \citep{golubitskyStewartSchaeffer1988} ---
+and it is the \emph{only} symmetry-breaking term in the family; everything
+else is axisymmetric.
+
+Read \eqref{eq:family} as a machine with three interlocking parts. The
+term $i\omega w$ spins the horizontal plane like a turntable. The term
+$\alpha(z-\beta)w$ makes the spin unstable or stable depending on
+altitude: above $z=\beta$ trajectories spiral outward, below it they are
+drawn back in. The vertical equation is a thermostat --- the cubic $-z^3$
+caps the altitude while $-\lambda|w|^2$ pushes $z$ down whenever
+trajectories wander far from the axis --- and the resonant term warps the
+circular spiral into an $n$-lobed one. On the axis $w=0$ the planar
+equations vanish and the equilibria are the real roots of
+$\mu + \nu z - z^3$; at every parameter set studied below there is exactly
+one, a saddle-focus whose unstable eigenplane is exactly the plane
+$z = z^\ast$ (the Jacobian is block diagonal there) and whose stable
+direction is the axis. Energy pumps in along the axis, spills outward, is
+reined back: the recirculating anatomy of Shilnikov-type chaos
+\citep{shilnikov1965}, with the symmetry painted on it.
+
+The search box is $\alpha\in[0.5,2.5]$, $\beta\in[-1,1.5]$,
+$\omega\in[1,4]$, $\gamma\in[0.3,2]$, $\mu\in[-1,2]$, $\nu\in[-1,2]$,
+$\lambda\in[0.5,3]$, with $n \in \{2,3,4,5\}$.
+
+\subsection{Batched evaluation and gates}\label{sec:eval}
+
+Candidates are evaluated in batches of 96 by a vectorized complex RK4
+integrator (step $dt=0.01$): an 8{,}000-step transient, then a
+25{,}000-step two-orbit Benettin estimate of the largest Lyapunov
+exponent (separation $10^{-8}$, renormalized every step), then a
+12{,}000-step orbit sample decimated to 1{,}500 points for
+fingerprinting. Orbits are culled as dead the moment any coordinate
+exceeds $50$ or goes non-finite; culling is checked every 200 steps so a
+diverging member of the batch cannot poison the rest. A candidate must
+survive the full evaluation with a largest exponent inside the archive's
+descriptor range (Section~\ref{sec:mapelites}) to be considered at all.
+The evaluator reproduces the independently computed Lyapunov exponent of
+the $C_3$ exhibit as a sanity check.
+
+\subsection{Shape fingerprints and catalog-grounded novelty}\label{sec:fingerprint}
+
+A fingerprint must be cheap and invariant to what does not matter:
+translation, scale, and rigid rotation. Each orbit sample is centered and
+normalized to unit RMS radius, then reduced to (i) the D2 shape
+distribution \citep{osada2002} --- the histogram, over 32 bins on
+$[0,3]$, of pairwise distances between 400 random orbit points, embedded
+by the Hellinger square root --- (ii) the PCA eigenvalue ratios
+$e_2/e_1$ and $e_3/e_1$ (how planar, how volumetric), and (iii) the
+occupied fraction of a $12^3$ grid over the bounding box (space-filling
+versus wiry). The distance between fingerprints is the Euclidean distance
+on the histogram block plus one half the Euclidean distance on the
+feature block. The novelty of a candidate is its minimum distance to a
+reference set containing the 135 fingerprinted systems of the
+\textsf{dysts} catalog \citep{gilpin2021} (higher-dimensional systems
+projected to their first three coordinates) \emph{plus every elite
+already in the archive}, so the search cannot rediscover itself.
+Section~\ref{sec:map} validates the metric and measures its noise floor.
+
+\subsection{The MAP-Elites archive}\label{sec:mapelites}
+
+The archive's cells are triples (rotation order $n$; largest Lyapunov
+exponent, 7 bins with edges $0.05,0.10,0.15,0.20,0.27,0.35,0.45,0.60$;
+vertical aspect ratio of the orbit cloud, 5 bins with edges
+$0.2,0.4,0.6,0.85,1.2,2.0$) --- 140 cells in all. Within a cell,
+candidates compete on novelty alone: a newcomer replaces the incumbent
+only if its catalog-grounded novelty is higher, in the spirit of novelty
+search with local competition \citep{lehmanStanley2011,mouretClune2015}.
+Each generation draws half its batch as Gaussian mutations of random
+elites ($\sigma$ = 8\% of each parameter range, clipped to the box) and
+half as fresh uniform samples; the archive persists on disk across runs,
+so the search compounds.
+
+\section{Results}\label{sec:results}
+
+\subsection{The atlas run}\label{sec:run}
+
+The first run evaluated 48 generations of 96 candidates --- 4{,}608
+seven-parameter systems across rotation orders $n=2..5$ --- in 127 seconds
+on a laptop CPU, and retained 62 elites (44\% of the 140 cells;
+Figure~\ref{fig:montage}). The empty cells are themselves data: no
+candidate with $\lambda_1 > 0.45$ appeared at $n=5$, and the five-fold
+elites that did appear are weakly chaotic --- either a real boundary of
+the family or a target for longer runs.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.9\linewidth]{atlas_montage.png}
+  \caption{The most novel elites of the first atlas run (4{,}608
+  candidates, 62 elites), rendered as orbit clouds. Each is a distinct
+  $C_n$-equivariant system; the archive keys cells by $(n, \lambda_1,
+  \text{aspect})$ and keeps the most catalog-novel specimen per cell.}
+  \label{fig:montage}
+\end{figure}
+
+\subsection{Three certified systems}\label{sec:systems}
+
+Three elites were promoted to named, certified exhibits: rounded to clean
+parameters (rounding \emph{raised} $\lambda_1$ in two of three cases),
+re-integrated at full length, and put through the battery of
+Table~\ref{tab:systems}. All three share the family anatomy --- a single
+on-axis saddle-focus organizing a symmetric recirculating bell --- and all
+three carry the $(+,0,-)$ spectrum and fractional Kaplan--Yorke dimension
+\citep{kaplanYorke1979} of genuine strange attractors. Boundedness was
+confirmed over $4\times10^6$ RK4 steps for each.
+
+\begin{table}[tbp]
+  \centering\small
+  \caption{The three certified exhibits. Spectra and dimensions are
+  mean $\pm$ s.d.\ over 10 random initial conditions at $dt=0.005$,
+  $8\times10^5$ steps (Section~\ref{sec:convergence}); novelty is the
+  fingerprint distance to the nearest \textsf{dysts} system, quoted as the
+  range over re-simulations (Section~\ref{sec:map}); isolation percentile
+  = fraction of catalog systems whose nearest neighbor is closer than
+  ours. $D_{\min}$ is the closest return of the unstable manifold to the
+  saddle-focus along the swept rotation-rate axis
+  (Section~\ref{sec:shilnikov}).}
+  \label{tab:systems}
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    & Naiad & Aurelia & Cassiopea \\
+    \midrule
+    Symmetry & $C_2$ & $C_3$ & $C_4$ \\
+    Coupling & $\gamma\conj{w}$ & $\gamma\conj{w}^{2}$ & $\gamma\conj{w}^{3}$ \\
+    Parameters & $(1.2,.68,3.7,1.7,1.2,2,2.1)$ & $(1.4,0.5,1.9)$\,$^{a}$ & $(2,.85,1.8,.9,1.28,1.8,2.8)$ \\
+    $\lambda_1$ & $0.294 \pm 0.009$ & $0.230 \pm 0.009$ & $0.523 \pm 0.008$ \\
+    $\lambda_2$ & $+0.0004$ & $+0.0003$ & $-0.0000$ \\
+    $\lambda_3$ & $-2.663 \pm 0.028$ & $-1.526 \pm 0.012$ & $-2.386 \pm 0.040$ \\
+    $\dky$ & $2.110 \pm 0.004$ & $2.151 \pm 0.006$ & $2.219 \pm 0.006$ \\
+    Equilibria & 1 & 1 & $1 + 4$\,$^{b}$ \\
+    Saddle-focus at & $(0,0,1.651)$ & $(0,0,1.523)$ & $(0,0,1.611)$ \\
+    Eigenvalues & $1.17 \pm 3.29i;\ -6.18$ & $1.43 \pm 1.90i;\ -5.56$ & $1.52 \pm 1.80i;\ -5.98$ \\
+    Saddle index $\nu$ & $0.189$ & $0.258$ & $0.254$ \\
+    Novelty (nearest) & $0.29$--$0.34$ & $0.18$ & $0.17$--$0.22$ \\
+    Isolation percentile & $97.8\%$ & $83.0\%$ & $79.3\%$ \\
+    Homoclinic $D_{\min}$ & $7.5\times10^{-5}$ & $0.128$ & $6.5\times10^{-4}$ \\
+    \bottomrule
+  \end{tabular}
+
+  \smallskip
+  \raggedright\footnotesize
+  $^{a}$ Aurelia's seven raw parameters collapsed under
+  Lyapunov-guarded rounding to three distinct constants
+  $(a,b,c)$: $\alpha{=}\mu{=}\nu{=}1.4$, $\gamma{=}\beta{=}0.5$,
+  $\omega{=}\lambda{=}1.9$.\quad
+  $^{b}$ A central saddle-focus plus a $C_4$ quadruple of saddles at
+  radius 3, far below the attractor.
+\end{table}
+
+The nearest catalog neighbors are dynamically sensible: Aurelia's is the
+Aizawa/Langford flow \citep{langford1984} --- the system a qualitative
+analysis would name, an axially organized rotating column --- and the
+isolation percentiles say that each exhibit is farther from everything
+known than most known systems are from each other (for Naiad, farther
+than 97.8\% of the catalog). Naming follows the family resemblance: all
+three are jellyfish-like bells organized by an axial column
+(\emph{Aurelia} the moon jelly, \emph{Naiad} the fountain nymph,
+\emph{Cassiopea} the four-fold upside-down jellyfish).
+
+\subsection{Convergence and error bars}\label{sec:convergence}
+
+Single Lyapunov estimates invite doubt, so every spectrum is measured on
+a grid: $dt \in \{0.01, 0.005, 0.0025\}$ $\times$ run lengths
+$\{2,4,8\}\times10^5$ steps $\times$ 10 random initial conditions per
+system (Benettin tangent-flow RK4 with QR re-orthonormalization
+\citep{benettin1980}; 90 long runs, none escaped). Figure~\ref{fig:conv}
+shows the result: estimates at different $dt$ agree within their
+initial-condition scatter, error bars shrink with run length, and the
+certified values sit inside every error bar. The obligatory zero exponent
+lands at $|\lambda_2| < 4\times10^{-4}$ across all 270 grid points ---
+two to three orders below $\lambda_1$ --- confirming the spectra are
+resolved. Segment-based standard errors (each $8\times10^5$-step run cut
+into ten segments) agree with the across-IC scatter.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{convergence.png}
+  \caption{Lyapunov convergence for the three systems: $\lambda_1$ (top)
+  and $\dky$ (bottom) versus run length, for three integrator steps,
+  mean $\pm$ s.d.\ over 10 initial conditions; dashed lines are the
+  certified values.}
+  \label{fig:conv}
+\end{figure}
+
+\subsection{The shape-space map}\label{sec:map}
+
+A novelty metric is only as good as its validation. Three tests
+(\texttt{scripts/validate\_fingerprint.py}):
+
+\emph{Positive control.} Documented geometric variants should cluster.
+The Lorenz lineage present in the catalog (Lorenz, LorenzBounded,
+LorenzStenflo, Chen, HyperLorenz, HyperLu) has mean within-family
+distance $0.21$ against a catalog-wide mean pairwise distance of $0.42$
+(ratio $0.49$), and the top nearest-neighbor pairs are documented twins:
+Lorenz$\leftrightarrow$LorenzBounded at $0.049$,
+Chen$\leftrightarrow$HyperLu at $0.042$.
+
+\emph{Negative control.} The Sprott systems are an \emph{algebraic}
+family --- minimal equations, deliberately diverse dynamics --- so a
+geometry metric should \emph{not} cluster them. It does not: 2 of 23
+Sprott systems have a Sprott nearest neighbor, at the null rate (0.164).
+The fingerprint reads shape, not symbols.
+
+\emph{Noise floor.} Re-fingerprinting one system across trajectory
+realizations and subsampling seeds gives a within-system spread of
+$0.055$ (15{,}000-point orbits) and $0.084$ at the catalog's own
+1{,}500-point trajectory length (shrinking to $0.050$ at 6{,}000
+points). Distances below ${\sim}0.1$ are therefore not interpretable ---
+LorenzBounded sits \emph{inside} Lorenz's own noise floor --- and
+nearest-neighbor \emph{identities} become rank-unstable wherever several
+systems tie within one noise floor, which is exactly what happens at our
+exhibits' distances: Naiad's nearest neighbor flips between SprottJerk
+and a forced FitzHugh--Nagumo system between re-simulations, and
+InteriorSquirmer ties Aizawa for Aurelia. The \emph{distances} are
+stable; we therefore quote ranges in Table~\ref{tab:systems} and claim
+isolation, not specific kinship. All three exhibits sit 3.1--5.2 noise
+floors from anything in the catalog.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{fingerprint_map.png}
+  \caption{Shape space of the 135 \textsf{dysts} systems (dots) with the
+  three exhibits (stars): metric MDS of fingerprint distances, Kruskal
+  stress-1 $= 0.133$. Dotted lines join each exhibit to its nearest
+  catalog neighbor. All three sit on the rim of the known cloud.}
+  \label{fig:map}
+\end{figure}
+
+The two-dimensional map of the joint distance matrix
+(Figure~\ref{fig:map}, Kruskal stress-1 $=0.133$) summarizes the
+geography: the catalog forms a connected central cloud, the famous
+systems scatter through its interior, and the three exhibits sit on the
+rim --- Naiad farthest out, beyond Thomas's weave.
+
+\subsection{Bifurcations and Shilnikov evidence}\label{sec:shilnikov}
+
+Sweeping Aurelia's rotation rate $c$ with $(a,b)$ fixed maps the route to
+chaos: limit cycles below $c \approx 1.40$, a chaotic band to
+${\approx}1.62$, a broader chaotic continent on $1.81$--$2.33$ holding
+the canonical $c=1.9$, periodic windows throughout, and a final flicker
+of chaos near $2.40$ (281-point scan, Figure~\ref{fig:homo} context;
+data in \texttt{results/bifurcation\_c.csv}). The chaotic set is a band,
+not a knife-edge.
+
+All three saddle-foci satisfy Shilnikov's eigenvalue inequality --- the
+saddle index $\nu = \rho/|\lambda_3|$ is $0.19$--$0.26 < 1$, and because
+neither $\rho$ nor $\lambda_3$ involves the rotation rate, the inequality
+holds along the entire swept axis. The missing ingredient for the theorem
+is a homoclinic orbit. We hunt for one by shooting: launch trajectories
+from a circle of radius $10^{-3}$ in the unstable eigenplane (48 phases
+spanning one $C_n$ sector), record the closest return to the equilibrium
+after the trajectory first leaves its neighborhood, minimize over phase,
+sweep the rotation rate, and zoom twice on the minimum
+(Figure~\ref{fig:homo}).
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{homoclinic.png}
+  \caption{The homoclinic hunt. Top: closest return of the unstable
+  manifold to the saddle-focus versus rotation rate (log scale; dashed =
+  canonical parameter; star = global minimum after two zoom stages).
+  Bottom: the minimizing shot in the $x$--$z$ plane;
+  $\times$ marks the saddle-focus. Naiad's minimizing orbit is a visually
+  closed Shilnikov loop.}
+  \label{fig:homo}
+\end{figure}
+
+The outcome splits the family. \textbf{Naiad}: the return distance
+plunges to $7.5\times10^{-5}$ at $\omega = 1.833$, and a \emph{ladder} of
+seven interior near-connection windows ($D \sim 10^{-4}$) accumulates
+between there and the canonical parameter, where the manifold still
+passes within $7.6\times10^{-4}$ of the equilibrium --- the canonical
+Naiad attractor lives essentially \emph{at} a Shilnikov configuration.
+\textbf{Cassiopea}: returns within $6.5\times10^{-4}$ at the low-rotation
+edge of the sweep and within $5.6\times10^{-3}$ at the canonical
+parameter. \textbf{Aurelia} is the holdout: across the entire band
+$c \in [0.8, 2.55]$ its manifold keeps a standoff distance
+$\ge 0.128$ (interior minimum at $c=1.256$) --- the reinjection column
+re-enters the spiral plane at finite radius, and any homoclinic
+connection must lie off the one-parameter $c$-axis. For Naiad and
+Cassiopea the evidence for nearby homoclinic bifurcations is strong
+(returns at $10^{-4}$ of the attractor scale); none of this is a proof,
+and rigorous verification in the style of \citet{tucker2002} remains
+open.
+
+\subsection{Chaos strength is not monotonic in symmetry order}\label{sec:nonmonotonic}
+
+Across the certified family, $\lambda_1 = 0.294$ ($C_2$), $0.230$
+($C_3$), $0.523$ ($C_4$): the four-fold member stretches more than twice
+as hard as the three-fold one, and the ordering is not monotonic in $n$.
+Proximity to homoclinicity does not explain the ordering either --- the
+two near-homoclinic members ($C_2$, $C_4$) bracket the standoff member
+($C_3$) in $\lambda_1$. Whether the cubic resonant coupling is
+intrinsically better at folding than the quadratic one, or Cassiopea
+merely occupies a luckier corner of its parameter box, is open; the
+archive's empty high-$\lambda_1$ cells at $n=5$ sharpen the question.
+
+\section{Limitations}\label{sec:limitations}
+
+\paragraph{Certification is numerical, not rigorous.}
+Lyapunov spectra, dimensions, and the homoclinic return distances are
+measurements with error bars, not theorems. No computer-assisted proof of
+chaos in the style of \citet{tucker2002} exists for any member of the
+family; producing one would be a genuine contribution.
+
+\paragraph{The catalog is not the literature.}
+Novelty is measured against the 135 systems of \textsf{dysts}, not
+against every published flow. The literature search of
+Section~\ref{sec:related} hedges the gap qualitatively, but a system
+absent from the catalog (or from our search) could still be a close
+relative; ``novel'' here always means \emph{measured against the
+catalog, not found by search elsewhere}. Enlarging the reference set ---
+for instance by fingerprinting the $2\times10^4$ evolved systems of
+\citet{lai2025panda} --- is mechanical future work.
+
+\paragraph{The fingerprint is crude and has a measured noise floor.}
+Geometry-only descriptors at 1{,}500--15{,}000 orbit points carry a
+within-system spread of $0.05$--$0.08$; distances below ${\sim}0.1$ are
+uninterpretable and nearest-neighbor identities tie at the isolation
+frontier (Section~\ref{sec:map}). Higher-dimensional catalog systems are
+projected to their first three coordinates before fingerprinting. The
+metric also ignores dynamics entirely --- two attractors with identical
+shapes but different time parameterizations are identical to it.
+
+\paragraph{One-parameter homoclinic sweeps.}
+The hunt sweeps a single parameter per system. Aurelia's standoff result
+means only that no connection exists \emph{along the $c$-axis}; a
+two-parameter hunt (e.g., in $(a,c)$) could find one and is the obvious
+next step.
+
+\paragraph{Aesthetics stayed human.}
+The exhibits were promoted from the archive partly by eye. The pipeline
+measures chaos and novelty, not beauty; the observation that strong
+stretching correlates with visual richness (our first, wiry, weakly
+chaotic family was discarded for looking dead) is a remark, not a result.
+
+\section{Reproducibility}\label{sec:repro}
+
+Every quantitative claim in this paper is one script in the public
+repository:\footnote{\url{https://github.com/Sakeeb91/attractor-atlas} ---
+code, results JSON, gallery, and an interactive WebGL viewer of all three
+systems (\url{https://sakeeb91.github.io/attractor-atlas/}).}
+\texttt{verify\_chaos.py} / \texttt{verify\_naiad.py} /
+\texttt{verify\_cassiopea.py} (certification),
+\texttt{convergence\_study.py} (Section~\ref{sec:convergence}),
+\texttt{validate\_fingerprint.py} (Section~\ref{sec:map}),
+\texttt{bifurcation\_scan.py} and \texttt{homoclinic\_hunt.py}
+(Section~\ref{sec:shilnikov}), \texttt{build\_catalog\_fingerprints.py}
+and \texttt{run\_atlas.py} (the engine; the archive persists across runs,
+so searches compound). Each writes its results to a versioned JSON file;
+the figures in this paper are the committed gallery renders. The full
+environment is NumPy/SciPy/Matplotlib plus \textsf{dysts} for the catalog
+and \textsf{numba} for the tangent-flow integrators.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
