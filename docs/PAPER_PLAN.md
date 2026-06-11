@@ -1,5 +1,15 @@
 # Paper plan: close the gap list, then draft the paper skeleton
 
+> **Status (2026-06-11): absorbed by [docs/SYMMETRY_PROGRAM.md](SYMMETRY_PROGRAM.md).**
+> The science question has shifted from a pure methods paper to the *symmetry program*:
+> a periodic table of strange attractors by point group, plus an empirical law of how
+> chaos strength depends on the group. Section 4 of the skeleton below becomes the
+> **symmetry law + bestiary** (see the revised §4 mapping). Phase 0 is done — the
+> literature strike lives in [docs/RELATED_WORK.md](RELATED_WORK.md) and all three
+> novelty claims survived. Phase 1 is done — **Mobula (S₄ rotoreflection)** is certified,
+> named, rendered, and in the viewer. The gap list below (Lyapunov rigor, fingerprint
+> validation, Shilnikov hunt) is still valid supporting work for the eventual paper.
+
 Work in this repository (github.com/Sakeeb91/attractor-atlas, live viewer
 sakeeb91.github.io/attractor-atlas). Read README.md and STORY.md first. Conventions: one logical
 change = one atomic commit, pushed; verify every render by viewing the PNG; claims must be
@@ -19,6 +29,12 @@ The project holds three certified, named strange attractors and a quality-divers
   novelty 0.34 (nearest SprottJerk). Off-axis equilibria algebraically impossible.
 - Cassiopea (C4): (2.0,0.85,1.8,0.9,1.28,1.8,2.8), lambda1 +0.525, D_KY 2.218, saddle-focus
   (0,0,1.611) + C4 quadruple of distant saddles at radius 3, novelty 0.224 (nearest NoseHoover).
+- Mobula (S4 rotoreflection): the first improper-symmetry member. Real form dx=(a z^2-b+d z)x-w y
+  +g(x^3-3xy^2), dy=(a z^2-b-d z)y+w x+g(y^3-3x^2 y), dz=nu z-z^3-lam z|w|^2+2e xy, with
+  (alpha,beta,omega,gamma,delta,nu,lam,eps)=(1.41039,0.670108,2.426585,0.3,0.553378,3.3,2.135518,1.215326).
+  lambda1 +0.330, D_KY 2.266, on-axis sigma-conjugate pair (0,0,+-1.817) + off-axis order-4
+  sigma-orbit of saddles, S4 residual 0.0136 vs 0.0455 flip control, novelty 0.273 (nearest
+  NuclearQuadrupole). Equivariance numerically unit-tested (tests/). Family in atlas/family_s4.py.
 - Engine (atlas/): MAP-Elites over Cn-equivariant flows n=2..5 (complex form
   dw/dt=[a(z-b)+i*omega]w + g*conj(w)^(n-1); dz/dt=mu+nu*z-z^3-lam*|w|^2), batched RK4 evaluator,
   D2-histogram+PCA fingerprints (atlas/fingerprint.py), novelty = min distance to the 135-system
@@ -44,6 +60,11 @@ multi-scroll literature has Cn-symmetric constructions; current README/STORY nov
    differs, what claims need rewording. Use WebSearch/alphaxiv-paper-lookup skills. Output:
    docs/RELATED_WORK.md + a follow-up commit softening any README/STORY claim that does not survive
    (especially "no published 3-D flow with discrete Cn equivariance": verify or hedge it).
+   **DONE (2026-06-11, Phase 0):** docs/RELATED_WORK.md verifies the three program claims —
+   polyhedral chaotic flows (no prior exhibit), rotoreflection S4/S6 designed attractors (clear),
+   chaos-vs-group law (unmapped). Letellier-Gilmore (rotation + inversion covers) and Reiter et al.
+   (polyhedral MAPS) are the nearest prior art; Field-Melbourne-Nicol admissibility is the theory
+   the constructions instantiate. Still TODO: fold the same citations into the paper's §2.
 2. **Lyapunov rigor**. New scripts/convergence_study.py: for each of the three systems compute the
    full spectrum at dt in {0.01, 0.005, 0.0025}, n_steps in {2e5, 4e5, 8e5}, 10 random ICs;
    report mean +/- std for lambda1 and D_KY (segment-based error bars); confirm lambda2 -> 0 as a
@@ -74,11 +95,17 @@ for GECCO or AIP template for Chaos at submission). Sections, with content mappi
    machine metaphor from STORY.md); 3.2 batched evaluation + gates (atlas/family.py); 3.3 shape
    fingerprints + catalog-grounded novelty (atlas/fingerprint.py, dysts); 3.4 MAP-Elites archive
    (atlas/map_elites.py: cells = symmetry order x lambda1 x aspect).
-4. Results: 4.1 the atlas run (4,608 candidates, 62 elites, throughput); 4.2 the three certified
-   systems w/ table (params, spectra, D_KY, equilibria, novelty distances + the 83% baseline stat);
-   4.3 convergence/error bars (gap 2); 4.4 fingerprint map figure (gap 3); 4.5 bifurcation +
-   Shilnikov evidence (existing bifurcation_c.csv + gap 4); 4.6 the non-monotonic chaos-vs-n
-   observation (0.296, 0.233, 0.525) as an open question.
+4. Results — **the bestiary + the symmetry law** (revised per docs/SYMMETRY_PROGRAM.md):
+   4.1 the atlas engine (candidates, elites, throughput; now spanning Cn AND the S4 family);
+   4.2 the bestiary table — every certified specimen by point group (Naiad C2, Aurelia C3,
+   Cassiopea C4, Mobula S4, + polyhedral specimens as Phase 2 lands): params, spectra, D_KY,
+   equilibria/symmetry of the fixed-point set, novelty distances + the 83% baseline stat;
+   4.3 the equivariance guarantee — numerical unit tests (tests/) that each family realizes its
+   stated group and no larger one (the S4-not-C4 distinction; S4 residual vs flip control);
+   4.4 convergence/error bars (gap 2); 4.5 fingerprint map figure (gap 3); 4.6 bifurcation +
+   Shilnikov evidence (gap 4); 4.7 **the chaos-vs-symmetry-group law** (Phase 3): matched-budget
+   max-lambda1 per group, currently non-monotonic (C2 0.296, C3 0.233, C4 0.525, S4 0.330), with
+   the cover-construction null hypothesis from RELATED_WORK.md.
 5. Limitations: numerical (not rigorous) certification; dysts is 135 systems, not the literature;
    fingerprint crudeness; aesthetics subjectivity.
 6. Reproducibility: everything is one script per claim in the public repo + live viewer URL.
