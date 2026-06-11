@@ -1,0 +1,158 @@
+{
+  "catalog_size": 135,
+  "within_dysts": {
+    "famous_nn_table": {
+      "Aizawa": {
+        "nearest": "NoseHoover",
+        "distance": 0.1555,
+        "second": "Lorenz96",
+        "second_distance": 0.1662
+      },
+      "Chen": {
+        "nearest": "HyperLu",
+        "distance": 0.0416,
+        "second": "HyperPang",
+        "second_distance": 0.0557
+      },
+      "ChenLee": {
+        "nearest": "CellCycle",
+        "distance": 0.2116,
+        "second": "ItikBanksTumor",
+        "second_distance": 0.2154
+      },
+      "Dadras": {
+        "nearest": "WangSun",
+        "distance": 0.1192,
+        "second": "LorenzCoupled",
+        "second_distance": 0.1293
+      },
+      "Halvorsen": {
+        "nearest": "Hadley",
+        "distance": 0.1937,
+        "second": "MacArthur",
+        "second_distance": 0.2128
+      },
+      "Lorenz": {
+        "nearest": "LorenzBounded",
+        "distance": 0.0488,
+        "second": "SprottS",
+        "second_distance": 0.0905
+      },
+      "NoseHoover": {
+        "nearest": "Aizawa",
+        "distance": 0.1555,
+        "second": "SprottMore",
+        "second_distance": 0.1874
+      },
+      "RabinovichFabrikant": {
+        "nearest": "HyperBao",
+        "distance": 0.0839,
+        "second": "RayleighBenard",
+        "second_distance": 0.1039
+      },
+      "Rossler": {
+        "nearest": "ShimizuMorioka",
+        "distance": 0.124,
+        "second": "MacArthur",
+        "second_distance": 0.1597
+      },
+      "Thomas": {
+        "nearest": "SprottTorus",
+        "distance": 0.3711,
+        "second": "StickSlipOscillator",
+        "second_distance": 0.3807
+      }
+    },
+    "median_nn_spacing": 0.1149,
+    "lorenz_lineage_positive_control": {
+      "members": [
+        "Lorenz",
+        "LorenzBounded",
+        "LorenzStenflo",
+        "Chen",
+        "HyperLorenz",
+        "HyperLu"
+      ],
+      "mean_within": 0.2096,
+      "median_within": 0.23,
+      "catalog_mean_pairwise": 0.4249,
+      "ratio": 0.493
+    },
+    "sprott_negative_control": {
+      "n_members": 23,
+      "nn_within_family": 2,
+      "fraction": 0.087,
+      "null_fraction": 0.164
+    }
+  },
+  "robustness": {
+    "aurelia": {
+      "n_replicas": 12,
+      "within_mean": 0.0549,
+      "within_max": 0.0873,
+      "nearest_catalog": "InteriorSquirmer",
+      "nearest_distance": 0.1857,
+      "snr_nearest": 3.4
+    },
+    "lorenz_dysts_1500": {
+      "n_replicas": 12,
+      "within_mean": 0.0835,
+      "within_max": 0.1321,
+      "nearest_catalog": "LorenzBounded",
+      "nearest_distance": 0.0454,
+      "snr_nearest": 0.5
+    },
+    "lorenz_dysts_6000": {
+      "n_replicas": 12,
+      "within_mean": 0.0498,
+      "within_max": 0.0921,
+      "nearest_catalog": "LorenzBounded",
+      "nearest_distance": 0.0549,
+      "snr_nearest": 1.1
+    }
+  },
+  "our_systems": {
+    "aurelia": {
+      "nearest": "Aizawa",
+      "distance": 0.1838,
+      "second": "InteriorSquirmer",
+      "second_distance": 0.1841,
+      "published_nearest": "Aizawa",
+      "published_distance": 0.185,
+      "nn_identity_stable": true
+    },
+    "naiad": {
+      "nearest": "ForcedFitzHughNagumo",
+      "distance": 0.2879,
+      "second": "TurchinHanski",
+      "second_distance": 0.3885,
+      "published_nearest": "SprottJerk",
+      "published_distance": 0.34,
+      "nn_identity_stable": false
+    },
+    "cassiopea": {
+      "nearest": "NoseHoover",
+      "distance": 0.1729,
+      "second": "Aizawa",
+      "second_distance": 0.1744,
+      "published_nearest": "NoseHoover",
+      "published_distance": 0.224,
+      "nn_identity_stable": true
+    }
+  },
+  "mds": {
+    "kruskal_stress_1": 0.1332,
+    "raw_stress": 41.1256,
+    "n_points": 138
+  },
+  "interpretation": {
+    "noise_floor_15k_points": 0.0549,
+    "noise_floor_catalog_1500_points": 0.0835,
+    "rule_of_thumb": "fingerprint distances below ~2x the noise floor are not interpretable; NN identities become rank-unstable when several catalog systems sit within one noise floor of the same distance",
+    "our_isolation_in_noise_floors": {
+      "aurelia": 3.3,
+      "naiad": 5.2,
+      "cassiopea": 3.1
+    }
+  }
+}
