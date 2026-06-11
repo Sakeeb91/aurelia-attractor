@@ -109,15 +109,25 @@ Searched June 10, 2026, before publication:
   dynamics through `|w|²` — does not appear in the known attractor catalogues
   (Lorenz, Rössler, Thomas, Aizawa/Langford, Halvorsen, Dadras, Chen, Sprott A–S,
   Rabinovich–Fabrikant, multi-scroll/multi-wing families) or in web/literature
-  searches for the equation terms.
+  searches for the equation terms. (Full positioning pass against the
+  equivariant-covers, multi-scroll, and normal-form literature:
+  [docs/RELATED_WORK.md](docs/RELATED_WORK.md).)
 * **Closest relatives, and how this differs:** Field & Golubitsky's celebrated
   *symmetric chaos icons* use equivariant polynomial couplings of the same spirit —
   but they are 2-D discrete **maps**, not continuous 3-D flows. The Aizawa/Langford
   attractor is a 3-D flow with rotational coupling — but it is SO(2)-symmetric
   (continuous rotation), has no equivariant `w̄²` term, and has a qualitatively
-  different two-equilibrium structure. The Aurelia system occupies the unexplored
-  intersection: *continuous flow* × *discrete C₃ equivariance* × *single
-  saddle-focus*.
+  different two-equilibrium structure. Discrete Cₙ rotation symmetry *does* occur
+  in published 3-D flows — the proto-Lorenz n-fold covers of Miranda & Stone, the
+  cover-system theory of Gilmore & Letellier, Thomas's cyclically symmetric system,
+  and the engineered multi-scroll families — but in all of these the symmetry is
+  either imposed by lifting known dynamics through an angle-multiplying map
+  (leaving the vector field singular on the axis and the dynamics locally identical
+  to the image system) or acts without Aurelia's plane-plus-axis anatomy. The
+  Aurelia system occupies a sparsely populated intersection: *globally polynomial
+  flow* × *discrete C₃ equivariance by construction, not by covering* × *single
+  organizing saddle-focus*. Full survey:
+  [docs/RELATED_WORK.md](docs/RELATED_WORK.md).
 * **The name** "Aurelia attractor" had no prior usage.
 * **Measured novelty.** Beyond the literature search, novelty is now a number:
   reducing attractors to shape fingerprints (D2 distance histograms + PCA shape
@@ -135,7 +145,8 @@ Searched June 10, 2026, before publication:
 The attractor was found by Monte-Carlo search over a seven-parameter
 C₃-equivariant family (`python scripts/search_parameters.py`), filtering for
 bounded orbits with a strongly positive largest Lyapunov exponent, then judged by
-eye for beauty. The winning region of parameter space collapsed — remarkably — to
+eye for beauty — a workflow whose ancestor is Sprott's automated aesthetic hunt
+over 2-D maps in 1993. The winning region of parameter space collapsed — remarkably — to
 just **three distinct constants** (a, b, c) = (1.4, 0.5, 1.9) with the largest
 Lyapunov exponent essentially unchanged.
 
@@ -154,6 +165,14 @@ is reduced to a shape fingerprint (D2 pairwise-distance histogram + PCA shape
 ratios + fill factor), and its novelty is the minimum fingerprint distance to
 the [dysts](https://github.com/williamgilpin/dysts) catalog of known chaotic
 systems plus everything already discovered in the archive.
+
+Evolved chaotic flows exist in the literature — genetic programming over
+Lorenz-like vector fields (Pan & Das 2015), and most recently the 20,000-system
+Panda corpus bred from the dysts catalog as training data (Lai, Bao & Gilpin
+2025) — but, to our knowledge, this is the first *quality-diversity* search over
+a family of dynamical systems, with novelty measured against a catalog of known
+attractors rather than chaos strength optimized
+([docs/RELATED_WORK.md](docs/RELATED_WORK.md)).
 
 ```bash
 pip install dysts                                # reference catalog (one-time)
