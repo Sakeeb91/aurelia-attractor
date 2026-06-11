@@ -119,6 +119,16 @@ Searched June 10, 2026, before publication:
   intersection: *continuous flow* × *discrete C₃ equivariance* × *single
   saddle-focus*.
 * **The name** "Aurelia attractor" had no prior usage.
+* **Measured novelty.** Beyond the literature search, novelty is now a number:
+  reducing attractors to shape fingerprints (D2 distance histograms + PCA shape
+  ratios, see `atlas/fingerprint.py`) and comparing against all 135 known
+  chaotic systems in the [dysts](https://github.com/williamgilpin/dysts)
+  catalog, Aurelia's nearest known neighbor is the Aizawa attractor at
+  distance 0.185. The catalog's own median nearest-neighbor spacing is 0.115;
+  83% of known systems sit closer to something known than Aurelia does. By
+  this metric, Aurelia is more isolated in shape space than five-sixths of
+  the established bestiary, and its nearest relative is exactly the system
+  the qualitative analysis predicted.
 
 ## Discovery method
 
@@ -128,6 +138,34 @@ bounded orbits with a strongly positive largest Lyapunov exponent, then judged b
 eye for beauty. The winning region of parameter space collapsed — remarkably — to
 just **three distinct constants** (a, b, c) = (1.4, 0.5, 1.9) with the largest
 Lyapunov exponent essentially unchanged.
+
+## The atlas engine: searching for the next Aurelia
+
+`atlas/` is a quality-diversity search engine that hunts for *new* chaotic
+attractors in the C&#8345;-equivariant generalization of Aurelia's design
+(rotation orders n = 2 to 5, so two-, four-, and five-fold flowers are in
+reach). Instead of optimizing a single score, it runs MAP-Elites: descriptor
+space (rotation order × Lyapunov exponent × vertical aspect) is tiled into
+cells, and each cell keeps the candidate most *novel* relative to a reference
+set of known attractors.
+
+Novelty is a measured number, not a literature claim: every candidate's orbit
+is reduced to a shape fingerprint (D2 pairwise-distance histogram + PCA shape
+ratios + fill factor), and its novelty is the minimum fingerprint distance to
+the [dysts](https://github.com/williamgilpin/dysts) catalog of known chaotic
+systems plus everything already discovered in the archive.
+
+```bash
+pip install dysts                                # reference catalog (one-time)
+python scripts/build_catalog_fingerprints.py     # fingerprint known systems (one-time)
+python scripts/run_atlas.py 12 96                # search: 12 generations, batches of 96
+python scripts/render_atlas_montage.py           # render the most novel elites
+```
+
+The batched evaluator integrates an entire population simultaneously with
+vectorized complex RK4 and reproduces Aurelia's Lyapunov exponent as a
+sanity check. The archive persists across runs (`results/atlas/archive.json`),
+so the search compounds.
 
 ## Reproduce everything
 
