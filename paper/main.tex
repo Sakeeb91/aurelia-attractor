@@ -28,18 +28,109 @@ Discovers Families of Equivariant Strange Attractors}
 \maketitle
 
 \begin{abstract}
-[Placeholder: one paragraph. A quality-diversity search over a
-$C_n$-equivariant family of three-dimensional polynomial flows, with novelty
-measured as shape-fingerprint distance to the 135-system dysts catalog,
-discovers certified strange attractors organized by single saddle-foci;
-three exhibits (Naiad $C_2$, Aurelia $C_3$, Cassiopea $C_4$) with full
-spectra, error bars, fingerprint validation, and homoclinic evidence.]
+Random search has been generating chaotic systems since the early 1990s, and
+evolutionary methods now breed them by the tens of thousands; what neither
+provides is a reason to look at any particular specimen. We describe a
+search whose objective is \emph{measured difference from everything already
+known}: a quality-diversity (MAP-Elites) loop over a $C_n$-equivariant
+family of three-dimensional polynomial flows, in which each candidate orbit
+is reduced to a geometry-only shape fingerprint and scored by its distance
+to the 135-system \textsf{dysts} catalog of published chaotic attractors.
+Cells of the archive are indexed by symmetry order, Lyapunov exponent, and
+body aspect, so the search illuminates the family rather than converging.
+A first run evaluated 4{,}608 candidate systems in 127 seconds and retained
+62 elites. We certify three exhibits --- Naiad ($C_2$), Aurelia ($C_3$),
+and Cassiopea ($C_4$) --- with full Lyapunov spectra and error bars
+($\lambda_1 = 0.294\pm0.009$, $0.230\pm0.009$, $0.523\pm0.008$), fractal
+dimensions, equilibrium analyses, bifurcation scans, and a homoclinic hunt
+that finds near-Shilnikov connections (return distances down to
+$7.5\times10^{-5}$) threading two of the three. We validate the fingerprint
+metric itself with positive and negative controls and an explicit noise
+floor; all three systems sit 3--5 noise floors from anything in the
+catalog. The exhibits are evidence for the method: catalog-grounded novelty
+turns ``yet another chaotic system'' into a measurable, falsifiable claim
+of isolation in shape space.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
-[Placeholder: discovery-of-dynamics framing; Sprott's 1994 random search as
-ancestor; what quality-diversity adds; the three exhibits are evidence for
-the method, not the claim.]
+
+Strange attractors have been discovered mostly one at a time. Lorenz found
+his by accident in a truncated convection model \citep{lorenz1963}; for
+three decades afterwards each new chaotic flow was an event, named for its
+finder. Sprott industrialized the process in 1994 by integrating millions
+of random quadratic systems and keeping the nineteen algebraically simplest
+chaotic ones \citep{sprott1994}, having already automated the analogous
+hunt over two-dimensional maps with an explicitly aesthetic filter
+\citep{sprott1993}. The genre this spawned eventually saturated: so many
+cosmetic variants of known systems were published that Sprott himself
+proposed editorial standards --- a new chaotic system should be simpler
+than anything known with the same behavior, or show behavior of genuine
+scientific interest \citep{sprott2011}. Modern evolutionary methods have
+only widened the firehose: genetic programming evolves hundreds of
+Lorenz-like variants by maximizing the largest Lyapunov exponent
+\citep{panDas2015}, and the Panda corpus bred $2\times10^4$ chaotic
+ordinary differential equations from catalog seeds as training data for a
+forecasting foundation model \citep{lai2025panda}. Generating chaotic
+systems is cheap. What remains expensive is a \emph{reason to look at any
+particular one}.
+
+This paper proposes that the missing objective is measured novelty. The
+machine-readable \textsf{dysts} catalog \citep{gilpin2021} collects 135
+published chaotic systems --- a century of the bestiary in one place ---
+and makes a new kind of search target possible: not ``is this chaotic?''
+(easy, and no longer interesting on its own) but ``how far is this, as a
+geometric object, from everything anyone has published?'' We reduce every
+candidate attractor to a cheap shape fingerprint (a D2 pairwise-distance
+histogram \citep{osada2002} plus gross-anatomy features), define novelty
+as the minimum fingerprint distance to the catalog, and make that number
+the selection signal.
+
+The second ingredient is a search algorithm that does not converge.
+Optimizing novelty alone collapses easily onto degenerate weirdness ---
+our own first run surfaced a nearly flat, barely chaotic sheet as its most
+novel specimen --- and optimizing chaos strength alone reproduces the
+firehose. Quality-diversity methods \citep{lehmanStanley2011,pugh2016},
+specifically MAP-Elites \citep{mouretClune2015}, hold a map of cells and
+keep the best specimen per cell; we index cells by symmetry order,
+Lyapunov exponent, and body aspect, so the output is an \emph{atlas} of
+distinct, certified, maximally unfamiliar attractors rather than one
+optimum.
+
+The third ingredient is structure. Rather than searching free-form
+equations, we search a single $C_n$-equivariant family of
+three-dimensional polynomial flows (Section~\ref{sec:family}), built from
+the unique resonant coupling $\gamma\conj{w}^{\,n-1}$ of equivariant
+bifurcation theory \citep{golubitskyStewartSchaeffer1988} joined to cubic
+axial dynamics. The family is parameterized by the rotation order $n$, so
+two-, three-, four-, and five-fold symmetric attractors live in one
+seven-dimensional parameter box, and every find inherits an interpretable
+anatomy: a single on-axis saddle-focus whose unstable spiral plane and
+strongly stable axis organize a symmetric recirculation.
+
+We present three certified exhibits --- Naiad ($C_2$), Aurelia ($C_3$),
+Cassiopea ($C_4$) --- but we emphasize that, per Sprott's standard, the
+exhibits are not the claim. The claim is the method: to our knowledge this
+is the first quality-diversity search over a family of dynamical systems,
+and the first use of catalog-grounded novelty as the selection objective
+for discovering chaotic flows. Our contributions:
+\begin{enumerate}
+  \item a novelty objective grounded in a scientific catalog, with the
+        metric itself validated by positive and negative controls and an
+        explicit noise floor (Section~\ref{sec:map});
+  \item an equivariant polynomial ansatz that turns symmetry order into a
+        searchable discrete dimension (Section~\ref{sec:family});
+  \item a MAP-Elites archive over symmetry $\times$ dynamics descriptors
+        with a batched evaluator (4{,}608 candidates in 127\,s on a
+        laptop; Section~\ref{sec:run});
+  \item a certification standard for machine-discovered systems: full
+        spectra with error bars over integrator settings and initial
+        conditions, equilibrium analysis, bifurcation scans, and a
+        homoclinic hunt (Sections~\ref{sec:convergence}--\ref{sec:shilnikov});
+  \item three certified, named exhibits and two measured surprises ---
+        chaos strength is not monotonic in symmetry order, and
+        near-homoclinic Shilnikov windows thread two of the three
+        families (Section~\ref{sec:nonmonotonic}).
+\end{enumerate}
 
 \section{Related work}\label{sec:related}
 [Placeholder: from docs/RELATED\_WORK.md -- symmetric chaos theory;
