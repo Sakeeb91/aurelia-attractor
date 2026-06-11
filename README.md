@@ -73,6 +73,7 @@ All numbers below are reproducible with `python scripts/verify_chaos.py`
 | Lyapunov spectrum (Benettin/QR, 600k steps) | **λ₁ = +0.2327**, λ₂ = +0.0013 ≈ 0, λ₃ = −1.5119 |
 | Kaplan–Yorke dimension | **D_KY ≈ 2.155** (fractal) |
 | λ₁ across 5 random initial conditions | 0.195 … 0.252 (always positive) |
+| Convergence study (3 dt × 3 lengths × 10 ICs) | λ₁ = +0.230 ± 0.009, D_KY = 2.151 ± 0.006 ([gallery/convergence.png](gallery/convergence.png), [results/convergence.json](results/convergence.json)) |
 | Equilibria | exactly one: saddle-focus at (0, 0, 1.5229) |
 | Eigenvalues at the equilibrium | 1.432 ± 1.9i (unstable spiral), −5.558 (strong contraction) |
 | Boundedness | confirmed over 4,000,000 RK4 steps |
@@ -217,6 +218,7 @@ recorded in [`results/naiad_verification.json`](results/naiad_verification.json)
 | Lyapunov spectrum | **λ₁ = +0.296**, λ₂ = +0.001 ≈ 0, λ₃ = −2.696 |
 | Kaplan–Yorke dimension | **D_KY ≈ 2.110** |
 | λ₁ across 5 random initial conditions | 0.284 … 0.341 (always positive) |
+| Convergence study (3 dt × 3 lengths × 10 ICs) | λ₁ = +0.294 ± 0.009, D_KY = 2.110 ± 0.004 |
 | Equilibria | exactly one: saddle-focus at (0, 0, 1.651) |
 | Eigenvalues at the equilibrium | 1.166 ± 3.286i (unstable spiral), −6.18 |
 | Time-averaged divergence | −2.386 (dissipative) |
@@ -257,6 +259,7 @@ Certified via `python scripts/verify_cassiopea.py`
 | Lyapunov spectrum | **λ₁ = +0.525**, λ₂ ≈ 0, λ₃ = −2.412 |
 | Kaplan–Yorke dimension | **D_KY ≈ 2.218** |
 | λ₁ across 5 random initial conditions | 0.490 … 0.555 (always positive) |
+| Convergence study (3 dt × 3 lengths × 10 ICs) | λ₁ = +0.523 ± 0.008, D_KY = 2.219 ± 0.006 |
 | Equilibria | a central saddle-focus at (0, 0, 1.611) plus a C₄ quadruple of distant saddles |
 | Eigenvalues at the saddle-focus | 1.522 ± 1.8i (unstable spiral), −5.984 |
 | Time-averaged divergence | −1.868 (dissipative) |
@@ -281,6 +284,7 @@ python scripts/verify_naiad.py        # certify Naiad, write results/naiad_verif
 python scripts/render_naiad.py        # render the Naiad gallery
 python scripts/verify_cassiopea.py    # certify Cassiopea
 python scripts/render_cassiopea.py    # render the Cassiopea gallery
+python scripts/convergence_study.py   # error-barred Lyapunov spectra for all three
 ```
 
 Or use it as a library:
