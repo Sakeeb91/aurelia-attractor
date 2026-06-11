@@ -43,10 +43,10 @@ def fingerprint(points, rng=None):
     sub = pts[idx]
     d = np.sqrt(((sub[:, None, :] - sub[None, :, :]) ** 2).sum(-1))
     d = d[np.triu_indices(len(sub), k=1)]
-    # float64 + clip: float32 inputs can land exactly on the top edge and
-    # overflow numpy's fast histogram path
+    # explicit edges: numpy 2.1.x's fast path (bins=int + range=) miscounts
+    # edge-landing float64 values; the explicit-edges path is correct
     d = np.clip(d.astype(np.float64), D2_RANGE[0], D2_RANGE[1])
-    hist, _ = np.histogram(d, bins=D2_BINS, range=D2_RANGE, density=True)
+    hist, _ = np.histogram(d, bins=np.linspace(*D2_RANGE, D2_BINS + 1), density=True)
     hist = np.sqrt(hist / (hist.sum() + 1e-12))          # Hellinger embedding
 
     cov = np.cov(pts.T)
