@@ -1,0 +1,104 @@
+% The Attractor Atlas - methods paper.
+% Venue-agnostic skeleton: plain article + natbib. Switch to ACM sigconf
+% (GECCO) or the AIP template (Chaos) at submission time.
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+\graphicspath{{../gallery/}}
+
+\newcommand{\dky}{D_{\mathrm{KY}}}
+\newcommand{\conj}[1]{\bar{#1}}
+
+\title{Quality-Diversity Search with Catalog-Grounded Novelty\\
+Discovers Families of Equivariant Strange Attractors}
+\author{Sakeeb Rahman\thanks{Code, data, and an interactive viewer:
+\url{https://github.com/Sakeeb91/attractor-atlas},
+\url{https://sakeeb91.github.io/attractor-atlas/}.}}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+[Placeholder: one paragraph. A quality-diversity search over a
+$C_n$-equivariant family of three-dimensional polynomial flows, with novelty
+measured as shape-fingerprint distance to the 135-system dysts catalog,
+discovers certified strange attractors organized by single saddle-foci;
+three exhibits (Naiad $C_2$, Aurelia $C_3$, Cassiopea $C_4$) with full
+spectra, error bars, fingerprint validation, and homoclinic evidence.]
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+[Placeholder: discovery-of-dynamics framing; Sprott's 1994 random search as
+ancestor; what quality-diversity adds; the three exhibits are evidence for
+the method, not the claim.]
+
+\section{Related work}\label{sec:related}
+[Placeholder: from docs/RELATED\_WORK.md -- symmetric chaos theory;
+equivariant 3-D flows that already exist (covers, Thomas, multi-scroll);
+the new-chaotic-system genre and its standards; automated discovery;
+catalogs and fingerprints; quality-diversity lineage.]
+
+\section{Method}\label{sec:method}
+
+\subsection{The equivariant family}\label{sec:family}
+[Placeholder: complex form, why $\conj{w}^{\,n-1}$ is the resonant coupling,
+the three-part machine metaphor.]
+
+\subsection{Batched evaluation and gates}\label{sec:eval}
+[Placeholder: vectorized complex RK4, escape/boundedness culling, two-orbit
+Benettin gate; throughput.]
+
+\subsection{Shape fingerprints and catalog-grounded novelty}\label{sec:fingerprint}
+[Placeholder: D2 histograms + PCA ratios + fill factor; novelty = min
+distance to dysts + archive.]
+
+\subsection{The MAP-Elites archive}\label{sec:mapelites}
+[Placeholder: cells = symmetry order $\times$ $\lambda_1$ $\times$ vertical
+aspect; novelty as quality; mutation + fresh draws.]
+
+\section{Results}\label{sec:results}
+
+\subsection{The atlas run}\label{sec:run}
+[Placeholder: 4{,}608 candidates in 127 s, 62 elites.]
+
+\subsection{Three certified systems}\label{sec:systems}
+[Placeholder: table of parameters, spectra, $\dky$, equilibria, novelty
+distances; the 83\% isolation statistic.]
+
+\subsection{Convergence and error bars}\label{sec:convergence}
+[Placeholder: the dt x length x IC grid; Figure convergence.png.]
+
+\subsection{The shape-space map}\label{sec:map}
+[Placeholder: fingerprint validation (controls, noise floor) and the MDS
+map; Figure fingerprint\_map.png.]
+
+\subsection{Bifurcations and Shilnikov evidence}\label{sec:shilnikov}
+[Placeholder: bifurcation scan of Aurelia; homoclinic hunt results;
+Figure homoclinic.png.]
+
+\subsection{Chaos strength is not monotonic in symmetry order}\label{sec:nonmonotonic}
+[Placeholder: $\lambda_1 = 0.294$ ($C_2$), $0.230$ ($C_3$), $0.523$ ($C_4$)
+as an open question.]
+
+\section{Limitations}\label{sec:limitations}
+[Placeholder: numerical (not rigorous) certification; dysts is 135 systems,
+not the literature; fingerprint crudeness and noise floor; aesthetics
+subjectivity.]
+
+\section{Reproducibility}\label{sec:repro}
+[Placeholder: one script per claim; live viewer; archive persistence.]
+
+\nocite{*}  % skeleton stage: render the whole verified bibliography
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
