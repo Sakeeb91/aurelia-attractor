@@ -103,7 +103,7 @@
 
   /* ---- system switcher (segmented control) ---- */
   .seg {
-    display: grid; grid-template-columns: 1fr 1fr;
+    display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 4px; margin-bottom: 14px;
     padding: 4px;
     border: 1px solid var(--line);
@@ -247,6 +247,7 @@
   <div class="seg" role="group" aria-label="Attractor">
     <button id="sys-aurelia" class="seg-btn" aria-pressed="true">Aurelia</button>
     <button id="sys-naiad" class="seg-btn" aria-pressed="false">Naiad</button>
+    <button id="sys-cassiopea" class="seg-btn" aria-pressed="false">Cassiopea</button>
   </div>
 
   <p class="hint" id="panel-hint"></p>
@@ -355,6 +356,29 @@ const SYSTEMS = {
     ramp: ['#08203a','#0f3d6b','#1f7a9c','#46b6c0','#9fe6d8','#e6fbff','#ffffff'],
     accent: '#9fe6d8',
     home: [3.0, -3.0, 1.9], target: [0, 0, 0.35],
+  },
+  cassiopea: {
+    name: 'CASSIOPEA',
+    desc: 'The four-fold member of the family, named for the upside-down jellyfish with the four-leaf-clover bell. From above it is a four-armed pinwheel star.',
+    hint: 'Cassiopea carries the strongest chaos of the three. The cubic symmetry term g shapes the star’s arms; pushing far from canonical can collapse or diverge.',
+    canvasLabel: 'Interactive 3D rendering of the Cassiopea attractor. Drag to orbit, scroll to zoom.',
+    stats: [['&lambda;&#8321;', '+0.525'], ['D_KY', '2.218'], ['equilibrium', 'saddle-focus (0, 0, 1.611)']],
+    canon: { a: 2.0, b: 0.85, w: 1.8, g: 0.9, mu: 1.28, nu: 1.8, lam: 2.8 },
+    sliders: [
+      { key: 'a', label: 'a', min: 1.60, max: 2.40, step: 0.005 },
+      { key: 'g', label: 'g', min: 0.60, max: 1.20, step: 0.005 },
+      { key: 'w', label: 'ω', min: 1.40, max: 2.40, step: 0.01 },
+      { key: 'lam', label: 'λ', min: 2.20, max: 3.40, step: 0.01 },
+    ],
+    deriv(x, y, z, P, out) {
+      out[0] = P.a * (z - P.b) * x - P.w * y + P.g * (x * x * x - 3 * x * y * y);
+      out[1] = P.w * x + P.a * (z - P.b) * y + P.g * (y * y * y - 3 * x * x * y);
+      out[2] = P.mu + P.nu * z - z * z * z - P.lam * (x * x + y * y);
+    },
+    seed: [0.3, 0.2, 0.1],
+    ramp: ['#06231c','#0d4a36','#1a7a4f','#3fbf7f','#9ff2c4','#eafff3','#ffffff'],
+    accent: '#9ff2c4',
+    home: [2.9, -2.9, 2.0], target: [0, 0, 0.3],
   },
 };
 
@@ -579,8 +603,9 @@ function applySkin() {
   canvas.setAttribute('aria-label', active.canvasLabel);
   $('sys-stats').innerHTML = active.stats
     .map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
-  $('sys-aurelia').setAttribute('aria-pressed', String(active === SYSTEMS.aurelia));
-  $('sys-naiad').setAttribute('aria-pressed', String(active === SYSTEMS.naiad));
+  for (const key of Object.keys(SYSTEMS)) {
+    $('sys-' + key).setAttribute('aria-pressed', String(active === SYSTEMS[key]));
+  }
 }
 
 function switchSystem(key) {
@@ -597,8 +622,9 @@ function switchSystem(key) {
   rebuild('');
 }
 
-$('sys-aurelia').addEventListener('click', () => switchSystem('aurelia'));
-$('sys-naiad').addEventListener('click', () => switchSystem('naiad'));
+for (const key of Object.keys(SYSTEMS)) {
+  $('sys-' + key).addEventListener('click', () => switchSystem(key));
+}
 
 const view = { speed: 1, paused: false };
 $('p-speed').addEventListener('input', e => {
