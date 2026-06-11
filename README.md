@@ -101,6 +101,23 @@ to a stable limit cycle; where it is positive, chaos reigns. The canonical
 
 ![Bifurcation scan](gallery/bifurcation.png)
 
+### The homoclinic hunt
+
+Shilnikov's theorem needs two things: the eigenvalue inequality (satisfied by
+all three systems, saddle index ν = 0.19–0.26 < 1) and a homoclinic orbit —
+the unstable manifold returning exactly to the equilibrium. A shooting hunt
+(`python scripts/homoclinic_hunt.py`) launches the manifold from the unstable
+eigenplane and sweeps the rotation rate. **Naiad**'s manifold returns to
+within **7.5×10⁻⁵** of its saddle-focus at w_rot = 1.833, with a ladder of
+seven near-connection windows accumulating below the canonical parameter
+(where the distance is still 7.6×10⁻⁴). **Cassiopea**'s returns to within
+6.5×10⁻⁴. For those two, homoclinic (Shilnikov) bifurcations almost certainly
+thread the family. **Aurelia** is the holdout: along the entire c-band its
+manifold keeps a standoff distance of ≈0.13 — the reinjection column re-enters
+the spiral plane at finite radius, and any connection must lie off the c-axis.
+
+![Homoclinic hunt](gallery/homoclinic.png)
+
 ## Novelty
 
 Searched June 10, 2026, before publication:
@@ -302,6 +319,7 @@ python scripts/verify_cassiopea.py    # certify Cassiopea
 python scripts/render_cassiopea.py    # render the Cassiopea gallery
 python scripts/convergence_study.py   # error-barred Lyapunov spectra for all three
 python scripts/validate_fingerprint.py # validate the novelty metric, draw the shape map
+python scripts/homoclinic_hunt.py     # hunt Shilnikov homoclinic connections
 ```
 
 Or use it as a library:
