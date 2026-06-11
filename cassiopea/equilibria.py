@@ -23,7 +23,7 @@ def find_equilibria(params=(A, B, W_ROT, G, MU, NU, LAM), n_seeds=400, seed=0, t
             found.append(np.array([0.0, 0.0, z.real]))
 
     rng = np.random.default_rng(seed)
-    for s0 in rng.uniform(-2.0, 2.0, size=(n_seeds, 3)):
+    for s0 in rng.uniform(-3.8, 3.8, size=(n_seeds, 3)):
         sol, _, ier, _ = fsolve(
             lambda s: velocity(s, *params), s0, full_output=True, xtol=1e-13
         )
