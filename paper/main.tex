@@ -531,6 +531,87 @@ intrinsically better at folding than the quadratic one, or Cassiopea
 merely occupies a luckier corner of its parameter box, is open; the
 archive's empty high-$\lambda_1$ cells at $n=5$ sharpen the question.
 
+\subsection{The chaos-vs-symmetry-group law and the irreducibility
+cliff}\label{sec:law}
+
+To turn the non-monotonicity into a systematic claim we ran a
+matched-budget search over a ladder of symmetry groups, each realized by
+an equivariant family: the cyclic groups $C_2,\dots,C_8$ (the family of
+\S\ref{sec:family}, parameterized by rotation order), the improper
+rotoreflection group $S_4$ (the Mobula family, generator
+$(w,z)\mapsto(iw,-z)$), and the three polyhedral \emph{rotation} groups
+$T$ (order 12), $O$ (24) and $I$ (60). Every group received the identical
+evaluator, the same number of candidate evaluations, and the same
+fine-step re-certification of the top candidates (the batched two-orbit
+estimate is optimistic and can fabricate chaos around stable equilibria
+at a coarse step; every reported maximum survives integration at
+$\mathrm{d}t=2.5\times10^{-3}$). The robust comparable is the maximum
+$\lambda_1$ that survives certification under equal budget; the chaotic
+\emph{fraction} is reported but not headlined, since the families differ
+in parameter count (7 for $C_n$, 8 for $S_4$, 4 for $T/O/I$).
+
+\begin{table}[t]\centering
+\begin{tabular}{llrr}
+\toprule
+group & action on $\mathbb{R}^3$ & $|G|$ & max certified $\lambda_1$\\
+\midrule
+$C_2$ & reducible & 2 & 0.41\\
+$C_3$ & reducible & 3 & 0.59\\
+$C_4$ & reducible & 4 & 0.56\\
+$C_5$ & reducible & 5 & 0.51\\
+$C_6$ & reducible & 6 & 0.27\\
+$C_7$ & reducible & 7 & 0.33\\
+$C_8$ & reducible & 8 & 0.18\\
+$S_4$ & reducible (improper) & 4 & 0.63\\
+$T$   & \textbf{irreducible} & 12 & $\mathbf{0.00}$\\
+$O$   & \textbf{irreducible} & 24 & $\approx 0$\\
+$I$   & \textbf{irreducible} & 60 & $\approx 0$\\
+\bottomrule
+\end{tabular}
+\caption{Maximum certified largest Lyapunov exponent per symmetry group
+under equal evaluation budget. The reducible-action groups host chaos
+with a non-monotonic dependence on order; the irreducible-action
+polyhedral groups fall to the floor. The few near-threshold polyhedral
+survivors are not genuine symmetric attractors --- their $\lambda_1$ fails
+to converge as $\mathrm{d}t\to0$ and their supports are off-center and
+anisotropic (symmetry-broken).}\label{tab:law}
+\end{table}
+
+Table~\ref{tab:law} shows two regimes separated by a sharp boundary. The
+cyclic and rotoreflection groups act \emph{reducibly} on $\mathbb{R}^3$
+(a plane rotation together with a height axis), which is precisely the
+structure that supplies the contraction--rotation--fold saddle-focus
+engine of \S\ref{sec:family}; they host chaos readily, and not
+monotonically in $|G|$. The polyhedral rotation groups act
+\emph{irreducibly}; by Schur's lemma the only $G$-commuting linear map is
+$\rho I$, so the linear part at the origin is forced to be a scalar and
+the saddle-focus engine is unavailable. An exhaustive, step-robust search
+of the polyhedral families (the complete degree-$3$ equivariant fields,
+plus degree-$4$/$5$ gradient and non-gradient equivariants; both uniform
+and fixed-point-stability-targeted sampling; ${\sim}10^5$ evaluations)
+found no strange attractor: bounded orbits relax to equilibria or limit
+cycles, and a balloon-like radial well slaves the dynamics onto a sphere,
+where the Poincar\'e--Bendixson theorem forbids chaos outright.
+Trigonometric ``labyrinth'' equivariants (the mechanism of Thomas's
+cyclically symmetric flow) yield at most weak ($\lambda_1\approx0.04$),
+spatially \emph{localized} chaos that breaks the symmetry, because a
+genuinely $G$-invariant attractor must enclose the origin, where the flow
+reduces to its non-chaotic polynomial core.
+
+We state this as strong numerical evidence, not a theorem: low-degree
+equivariant flows under an irreducible polyhedral action on $\mathbb{R}^3$
+resist chaos. It is a candidate explanation for a gap in the literature
+--- chaotic \emph{maps} with tetrahedral, octahedral and icosahedral
+symmetry are classical \citep{fieldGolubitsky2009}, yet we are aware of no
+chaotic \emph{flow} carrying a polyhedral rotation group, and a map need
+never integrate a vector field past Schur's wall. The achievable
+polyhedral invariant sets are equilibria and symmetric limit cycles. As a
+null check (after the Letellier--Gilmore cover/image construction, in
+which the cover's exponent is independent of the covering group), our
+families are independently searched rather than covers of a shared image,
+so the measured group-dependence is a property of the equivariant design
+space, not a cover artifact.
+
 \section{Limitations}\label{sec:limitations}
 
 \paragraph{Certification is numerical, not rigorous.}

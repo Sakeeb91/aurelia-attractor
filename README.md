@@ -356,6 +356,74 @@ a constant in `dz/dt`, Mobula's on-axis equilibria are the *symmetric* triple
 `z(ν − z²) = 0`, and the symmetry is visible in the fixed-point structure: σ
 exchanges the two off-axis-z equilibria and they carry identical eigenvalues.
 
+## The polyhedral wall: an irreducibility obstruction
+
+The [symmetry program](docs/SYMMETRY_PROGRAM.md) set out to climb past the cyclic
+and rotoreflection groups to the **Platonic** ones — a strange attractor with the
+rotation symmetry of a tetrahedron (T, order 12), an octahedron (O, 24), and, as
+the intended signature image, an icosahedron (I, 60). The equivariant families
+were constructed and their symmetry proven to machine precision
+(`atlas/family_{t,o,i}.py`, `tests/test_{t,o,i}_equivariance.py` — 22 tests
+including the degree-6 icosahedral invariant built as `Σ_{g∈I} ((g·v)·X)⁶`).
+
+**No chaotic flow exists in them — and that is the finding.** The cyclic and
+rotoreflection groups act *reducibly* on R³ (a plane rotation plus a height
+axis), which is exactly what supplies the saddle-focus engine behind all four
+jellyfish. The polyhedral rotation groups act *irreducibly*, so by Schur's lemma
+the only commuting linear map is `ρ·I`: **there is no linear engine.** An
+exhaustive, dt-robust search (polynomial degrees 3–5, gradient and non-gradient
+rotational equivariants; uniform-random and fixed-point-stability-targeted;
+~10⁵ evaluations) finds no strange attractor — bounded orbits relax to equilibria
+or limit cycles. Apparent chaos at a coarse step is an RK4 artifact: a candidate
+reading λ₁ ≈ +0.4 at dt = 0.01 collapses to λ₁ ≈ −20 (a stable fixed point) at
+dt = 0.0025. Even trigonometric "labyrinth" flows (the Thomas mechanism) give
+only weak (λ₁ ≈ 0.04), spatially *localized* — i.e. symmetry-broken — chaos,
+because a genuinely symmetric attractor must wrap the origin, where the flow
+reduces to its non-chaotic polynomial core. This is strong numerical evidence
+(not a proof) for why the literature has chaotic *maps* with polyhedral symmetry
+but no chaotic *flow*. What the polyhedral groups host is the rung below chaos:
+equilibria and symmetric limit cycles.
+
+## The chaos-vs-symmetry-group law
+
+Giving every group the same search budget and the same fine-dt re-certification
+([`scripts/symmetry_law.py`](scripts/symmetry_law.py) → [`results/symmetry_law.csv`](results/symmetry_law.csv))
+turns the bestiary into one quantitative claim. The robust comparable is the
+**maximum largest-Lyapunov-exponent that survives long-integrator certification**
+under equal evaluation budget (the chaotic *fraction* is only loosely comparable
+across families with different parameter counts, so it is reported but not
+headlined):
+
+| group | action on R³ | \|G\| | max certified λ₁ | named specimen |
+|---|---|---:|---:|---|
+| C₂ | reducible | 2 | 0.41 | Naiad (λ₁ 0.296) |
+| C₃ | reducible | 3 | 0.59 | Aurelia (0.233) |
+| C₄ | reducible | 4 | 0.56 | Cassiopea (0.525) |
+| C₅ | reducible | 5 | 0.51 | — |
+| C₆ | reducible | 6 | 0.27 | — |
+| C₇ | reducible | 7 | 0.33 | — |
+| C₈ | reducible | 8 | 0.18 | — |
+| S₄ | reducible (improper) | 4 | 0.63 | Mobula (0.330) |
+| **T** | **irreducible** | 12 | **0.00** | — (obstruction) |
+| **O** | **irreducible** | 24 | **≈0**† | — (obstruction) |
+| **I** | **irreducible** | 60 | **≈0**† | — (obstruction) |
+
+†The lone near-threshold polyhedral survivors are not genuine symmetric attractors:
+their λ₁ fails to converge as dt → 0, and their orbits are off-center and
+anisotropic (symmetry-broken), not invariant sets of the full group.
+
+The max certified λ₁ is the *family maximum* found by the matched search; it
+exceeds the curated named specimen's λ₁ (specimens were chosen for beauty and
+novelty, not maximal stretching). Two regimes are visible
+([`gallery/symmetry_law.png`](gallery/symmetry_law.png)): the reducible-action
+groups host chaos with a **non-monotonic** dependence on order, while the
+irreducible-action polyhedral groups fall off an **irreducibility cliff** to zero.
+The amount of chaos a symmetry permits depends less on *how much* symmetry there
+is than on *what kind*. (Null check, after Letellier–Gilmore: in a cover/image
+construction the cover's exponent is independent of the covering group; our
+families are independently searched, not covers of a shared image, so the
+group-dependence is a real property of the equivariant design space.)
+
 ## Reproduce everything
 
 ```bash
@@ -374,6 +442,7 @@ python scripts/render_mobula.py       # render the Mobula gallery
 python scripts/convergence_study.py   # error-barred Lyapunov spectra
 python scripts/validate_fingerprint.py # validate the novelty metric, draw the shape map
 python scripts/homoclinic_hunt.py     # hunt Shilnikov homoclinic connections
+python scripts/symmetry_law.py all    # chaos-vs-symmetry law: C2..C8, S4, T, O, I + figure
 python -m pytest tests/               # numerical equivariance + cross-check tests
 ```
 

@@ -137,3 +137,50 @@ maps (Chossat-Golubitsky); thin for flows. One script + figure if found.
   where Section 4 becomes the symmetry law + bestiary; STORY.md gains chapters as specimens land.
 - Report at each phase boundary: verdicts (Phase 0), certified numbers (Phases 1-2), the law
   figure (Phase 3).
+
+## Outcomes (as executed, June 2026)
+
+**Phase 0 (literature strike): done.** All three novelty claims survived a targeted search;
+verdicts in `docs/RELATED_WORK.md` (Part B). No prior polyhedral chaotic *flow* found in the
+literature -- only maps (Field-Golubitsky, Reiter) and admissibility theory (Melbourne-Dellnitz-
+Golubitsky). That absence turns out to be meaningful (see Phase 2).
+
+**Phase 1 (S4 rotoreflection specimen): done.** Mobula, certified and named (lambda1 = 0.330,
+D_KY = 2.266), in the viewer and the bestiary. The S4 group acts *reducibly* on R^3 (a 2-D plane
+rotation plus a 1-D height), so it inherits the C_n family's saddle-focus engine and goes chaotic
+readily.
+
+**Phase 2 (polyhedral specimens): the irreducibility obstruction (a negative result that is the
+finding).** The T, O, and I equivariant families are built and their symmetry is proven
+numerically (`atlas/family_{t,o,i}.py`, `tests/test_{t,o,i}_equivariance.py`). But unlike C_n/S4,
+the polyhedral rotation groups act *irreducibly* on R^3, so by Schur the only commuting linear map
+is rho*I: **there is no saddle-focus linear engine.** An exhaustive, dt-robust search found NO
+strange attractor in these families:
+
+  - Polynomial ansatze (degree-3 complete, plus degree-4/5 gradient and non-gradient rotational
+    equivariants; both uniform-random and fixed-point-stability-targeted; ~10^5 evaluations):
+    bounded orbits relax to equilibria or limit cycles. The "all fixed points unstable + bounded"
+    configurations (forced by Poincare-Hopf to host a cycle or a strange set) yield limit cycles.
+  - Coarse-dt Benettin estimates *fabricate* chaos around stable equilibria: a candidate with
+    lambda1 ~ +0.4 at dt=0.01 collapses to lambda1 ~ -15 to -25 at dt=0.0025 (a stable fixed
+    point). Every apparent hit reversed sign under dt refinement -- the standard re-certification
+    caught all of them.
+  - Trigonometric "labyrinth" T-equivariant flows (Thomas-style, the only chaotic-flow route in
+    the literature with related symmetry) give at most weak (lambda1 ~ 0.04) chaos that is
+    spatially *localized* to a single labyrinth cell -- i.e. symmetry-BROKEN, not a single
+    T-invariant attractor. Near the origin (the only T-fixed point a symmetric attractor could
+    center on) the trig flow reduces to its non-chaotic polynomial Taylor expansion.
+
+This is strong numerical evidence -- not a proof -- that low-degree equivariant 3-D flows under an
+*irreducible* polyhedral action resist chaos, and is a candidate explanation for the literature's
+absence of any polyhedral chaotic flow. The achievable polyhedral invariant sets are equilibria
+and limit cycles, which *can* carry the full rotation group; chaos cannot (here).
+
+**Phase 3 (the chaos-vs-symmetry-group law): done -- and it now carries the Phase 2 finding.**
+`scripts/symmetry_law.py` runs a matched-budget search over C2..C8, S4, T, O, I, re-certifies the
+top-K of each with the long integrator, and records the maximum certified lambda1 per group:
+`results/symmetry_law.csv`, figure `gallery/symmetry_law.png`. The law shows two regimes: the
+*reducible-action* groups (C_n, S4) host chaos with a non-monotonic dependence on order, while the
+*irreducible-action* polyhedral groups (T, O, I) sit at ~zero certified chaos -- the irreducibility
+cliff. The robust comparable is max certified lambda1 under equal evaluation budget (the chaotic
+*fraction* is only loosely comparable across families with different parameter counts).
