@@ -1,0 +1,14 @@
+{
+  "group": "I",
+  "order": 60,
+  "n_params": 4,
+  "n_eval": 4000,
+  "chaotic_fraction_batch": 0.00125,
+  "n_certified_of_topK": 0,
+  "max_lambda1_certified": 0.0,
+  "best_params": null,
+  "spectrum_at_max": null,
+  "D_KY_at_max": null,
+  "seconds": 342.3,
+  "note": "reduced eval budget (N=4000; the degree-6 icosahedral gradient is ~50x costlier per step than the polynomial families). The reduced run flagged one candidate at lambda1~0.065 under a short certification, but under the STANDARD long integrator (same as all other groups) it gives lambda1=0.0143 < 0.02 threshold, and its support is off-center and anisotropic (symmetry-broken, a-coefficient ~0). The obstruction is budget-independent (T and O give the floor at the full N=12000 budget under the identical irreducibility mechanism)."
+}
