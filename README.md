@@ -6,6 +6,8 @@
 
 **[Read the story](STORY.md)**: a long-form narrative of the whole arc, from the failed first family through the 600-universe search and the certification of Aurelia, to the quality-diversity engine that found its siblings Naiad and Cassiopea, and on to Mobula — the first member whose symmetry is a rotation-plus-reflection.
 
+**[Read the methods](docs/METHODOLOGY.md)**: the complete methodology — every construction and formula (the equivariant families, term audits, invariant theory), the search and certification protocols, the step-size artifact and its gate, the polyhedral obstruction evidence, and the symmetry-law protocol, with a claim-by-claim reproducibility map.
+
 ![The Aurelia attractor](gallery/aurelia_hero.png)
 
 ## The system
