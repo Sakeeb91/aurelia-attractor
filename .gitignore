@@ -17,3 +17,6 @@ paper/*.aux
 paper/*.log
 paper/*.bbl
 paper/*.blg
+
+# Rotation GIF fallbacks (heavy, regenerable via scripts/render_rotations.py; the web page uses the mp4/webm)
+gallery/*_orbit.gif
